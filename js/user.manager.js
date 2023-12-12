@@ -10,7 +10,7 @@ class UserManager {
         id:
           UserManager.#users.length === 0
             ? 1
-            : UserManager.#users[UserManager.#users.length - 1].id++,
+            : UserManager.#users[UserManager.#users.length - 1].id+1,
         name,
         photo,
         email,
