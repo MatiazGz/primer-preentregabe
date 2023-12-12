@@ -1,7 +1,7 @@
 class EventManager {
   static events = [];
   //# para definir propiedad privada (para usarse solo dentro de la clase)
-  static #pergain = 0.3;
+  static #perGain = 0.3;
   static #totalGain = 0;
   constructor(data) {
     this.id =
@@ -31,26 +31,46 @@ class EventManager {
   read (){
     return EventManager.events
   }
+  readByID (id) {
+    return EventManager.events.find((each) => each.id === Number(id))
+  }
+  soldTicket (quantity,eventId) {
+    const event = this.readByID(eventId) // guardo el evento a modificar (disminuir capacidad al vender entradas)
+    event.capacity = event.capacity - quantity 
+    EventManager.#totalGain = EventManager.#totalGain + quantity*event.price*EventManager.#perGain
+    return true
+
+  }
+  getGain(){
+    return EventManager.#totalGain
+  }
 }
 
 const events = new EventManager({
   name: "Mega Death",
   place: "showcase",
 });
-events.create ({
+events.createEvent ({
   name: "Arctic Monkeys",
   place: "showcase",
 });
-events.create ({
+events.createEvent ({
   name: "Guns n Roses",
   place: "showcase",
 });
-events.create({ 
+events.createEvent ({ 
     name: "Muse", 
     place: "showcase" 
 });
-events.create ({  
+events.createEvent ({  
     name: "Eminem", 
     place: "showcase" 
 });
-console.log (events.read);
+
+
+events.soldTicket(5,2)
+events.soldTicket(9,5)
+console.log (events.read ())
+console.log (events.getGain())
+
+
