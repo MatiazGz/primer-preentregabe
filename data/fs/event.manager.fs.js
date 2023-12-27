@@ -79,7 +79,7 @@ class EventsManager {
     try {
       let one = this.events.find((each) => each.id === id);
       if (!one) {
-        throw new Error("no hay ningun evento con id=" + id);
+        throw new Error("no hay ningun evento");
       } else {
         this.events = this.events.filter((each) => each.id !== id);
         const jsonData = JSON.stringify(this.events, null, 2);
@@ -106,20 +106,14 @@ class EventsManager {
           console.log("capacidad disponible " + one.capacity);
           return one.capacity;
         } else {
-            throw new Error("no queda disponibilidad de ese evento");
+          throw new Error("no queda disponibilidad de ese evento");
         }
       }
     } catch (error) {
       error.message;
     }
   }
+  destroy() {}
 }
 const events = new EventsManager("./data/fs/files/events.json");
-events.createEvent({name:"Mega Death",place:"showcase"})
-events.createEvent({name:"Arctic Monkeys",place:"showcase"})
-events.createEvent({name:"Guns n Roses",place:"showcase"})
-events.createEvent({name:"Muse",place:"showcase"})
-events.readEvents()
-events.readEventById("6c0556a102d0cedafaf590cd")
-events.removeEventById("4c99c51943a077365981d0ea")
-events.soldticket("6c0556a102d0cedafaf590cd")
+export default events;
