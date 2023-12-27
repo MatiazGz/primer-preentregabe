@@ -112,7 +112,6 @@ class ProductManager {
       error.message;
     }
   }
-  destroy() {}
 }
 const products = new ProductManager("./data/fs/files/products.json");
 export default products;

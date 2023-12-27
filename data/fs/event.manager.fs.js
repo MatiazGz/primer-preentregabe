@@ -113,7 +113,6 @@ class EventsManager {
       error.message;
     }
   }
-  destroy() {}
 }
 const events = new EventsManager("./data/fs/files/events.json");
 export default events;
