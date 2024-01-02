@@ -1,5 +1,5 @@
 import express from "express";
-import events from "./data/fs/events.fs.js";
+import events from "./data/fs/event.manager.fs.js";
 import users from "./data/fs/users.fs.js";
 import products from "./data/fs/product.manager.fs.js";
 
