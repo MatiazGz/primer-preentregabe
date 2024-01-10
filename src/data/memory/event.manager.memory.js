@@ -75,16 +75,13 @@ class EventManager {
           EventManager.#totalGain +
           EventManager.#perGain * quantity * one.price;
         return one.capacity;
-       }
+      }
     } catch (error) {
       return error.messaje;
     }
   }
-  getGain(){
-    return EventManager.#totalGain
+  getGain() {
+    return EventManager.#totalGain;
   }
-  removeEventById(id){
-
-  }
-
+  removeEventById(id) {}
 }

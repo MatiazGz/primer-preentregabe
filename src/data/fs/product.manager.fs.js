@@ -17,7 +17,7 @@ class ProductManager {
         this.products = JSON.parse(fs.readFileSync(this.path, "utf-8"));
       }
     } catch (error) {
-      return error.message;
+      throw error;
     }
   }
   constructor(path) {
@@ -28,11 +28,13 @@ class ProductManager {
   async createProduct(data) {
     try {
       if (!data.title || !data.photo) {
-        throw new Error("se requiere nombre y foto");
+        const error = new Error("Se requiere nombre y foto");
+        error.statusCode = 400;
+        throw error;
       }
       const product = {
         id: crypto.randomBytes(12).toString("hex"),
-        title: data.tilte,
+        title: data.title,
         photo: data.photo,
         price: data.price || 10,
         stock: data.stock || 50,
@@ -43,42 +45,45 @@ class ProductManager {
       console.log("create " + product.id);
       return product.id;
     } catch (error) {
-      console.log(error.message);
-      return error.message;
+      throw error;
     }
   }
   readProducts() {
     try {
       if (this.products.length === 0) {
-        throw new Error("No se encontraron productos!");
+        const error = new Error("No se encontraron productos!");
+        error.statusCode = 404;
+        throw error;
       } else {
         console.log(this.products);
         return this.products;
       }
     } catch (error) {
-      console.log(error.message);
-      return error.message;
+      throw error;
     }
   }
   readProductById(id) {
     try {
       const one = this.products.find((each) => each.id === id);
       if (!one) {
-        throw new Error("no hay ningun producto con id:" + id);
+        const error = new Error("No se encontraron productos!");
+        error.statusCode = 404;
+        throw error;
       } else {
         console.log("leer " + one);
         return one;
       }
     } catch (error) {
-      console.log(error.message);
-      return error.message;
+      throw error;
     }
   }
   async removeProductById(id) {
     try {
       let one = this.products.find((each) => each.id === id);
       if (!one) {
-        throw new Error("no hay ningun producto");
+        const error = new Error("no hay ningun producto!");
+        error.statusCode = 400;
+        throw error;
       } else {
         this.products = this.products.filter((each) => each.id !== id);
         const jsonData = JSON.stringify(this.products, null, 2);
@@ -87,8 +92,7 @@ class ProductManager {
         return id;
       }
     } catch (error) {
-      console.log(error.message);
-      return error.message;
+      throw error;
     }
   }
   async soldProduct(quantity, eid) {
@@ -105,13 +109,44 @@ class ProductManager {
           console.log("cantidad disponible " + one.stock);
           return one.stock;
         } else {
-          throw new Error("no queda disponibilidad de ese producto");
+          const error = new Error("no queda disponibilidad de ese producto");
+          error.statusCode = 400;
+          throw error;
         }
       }
     } catch (error) {
-      error.message;
+      throw error;
+    }
+  }
+  async updateProduct(productId, newData) {
+    try {
+      const productIndex = this.products.findIndex(
+        (product) => product.id === productId
+      );
+
+      if (productIndex === -1) {
+        const error = new Error("Producto no encontrado");
+        error.statusCode = 400;
+        throw error;
+      }
+
+      const updatedProduct = {
+        ...this.products[productIndex],
+        ...newData,
+      };
+
+      this.products[productIndex] = updatedProduct;
+
+      const jsonData = JSON.stringify(this.products, null, 2);
+      await fs.promises.writeFile(this.path, jsonData);
+
+      console.log("Producto actualizado:", productId);
+      return productId;
+    } catch (error) {
+      throw error;
     }
   }
 }
-const products = new ProductManager("./data/fs/files/products.json");
+const products = new ProductManager("./src/data/fs/files/products.json");
 export default products;
+

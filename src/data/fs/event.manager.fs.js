@@ -17,7 +17,7 @@ class EventsManager {
         this.events = JSON.parse(fs.readFileSync(this.path, "utf-8"));
       }
     } catch (error) {
-      return error.message;
+      throw error;
     }
   }
   constructor(path) {
@@ -28,7 +28,9 @@ class EventsManager {
   async createEvent(data) {
     try {
       if (!data.name || !data.place) {
-        throw new Error("se requiere nombre y lugar");
+        const error = new Error("Se requiere nombre y lugar");
+        error.statusCode = 400;
+        throw error;
       }
       const event = {
         id: crypto.randomBytes(12).toString("hex"),
@@ -44,42 +46,45 @@ class EventsManager {
       console.log("create " + event.id);
       return event.id;
     } catch (error) {
-      console.log(error.message);
-      return error.message;
+      throw error;
     }
   }
   readEvents() {
     try {
       if (this.events.length === 0) {
-        throw new Error("No se encontraron eventos!");
+        const error = new Error("No se encontraron eventos!");
+        error.statusCode = 404;
+        throw error;
       } else {
         console.log(this.events);
         return this.events;
       }
     } catch (error) {
-      console.log(error.message);
-      return error.message;
+      throw error;
     }
   }
   readEventById(id) {
     try {
       const one = this.events.find((each) => each.id === id);
       if (!one) {
-        throw new Error("no hay ningun evento con id:" + id);
+        const error = new Error("No se encontraron eventos!");
+        error.statusCode = 404;
+        throw error;
       } else {
         console.log("leer " + one);
         return one;
       }
     } catch (error) {
-      console.log(error.message);
-      return error.message;
+      throw error;
     }
   }
   async removeEventById(id) {
     try {
       let one = this.events.find((each) => each.id === id);
       if (!one) {
-        throw new Error("no hay ningun evento");
+        const error = new Error("No hay ningun evento!");
+        error.statusCode = 404;
+        throw error;
       } else {
         this.events = this.events.filter((each) => each.id !== id);
         const jsonData = JSON.stringify(this.events, null, 2);
@@ -88,8 +93,7 @@ class EventsManager {
         return id;
       }
     } catch (error) {
-      console.log(error.message);
-      return error.message;
+      throw error;
     }
   }
   async soldticket(quantity, eid) {
@@ -106,13 +110,15 @@ class EventsManager {
           console.log("capacidad disponible " + one.capacity);
           return one.capacity;
         } else {
-          throw new Error("no queda disponibilidad de ese evento");
+          const error = new Error("no queda disponibilidad de ese evento");
+          error.statusCode = 400;
+          throw error;
         }
       }
     } catch (error) {
-      error.message;
+      throw error;
     }
   }
 }
-const events = new EventsManager("./data/fs/files/events.json");
+const events = new EventsManager("./src/data/fs/files/events.json");
 export default events;

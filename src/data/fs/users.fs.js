@@ -12,7 +12,7 @@ class UsersManager {
         this.users = JSON.parse(fs.readFileSync(this.path, "utf-8"));
       }
     } catch (error) {
-      return error.message;
+      throw error;
     }
   }
   constructor(path) {
@@ -23,15 +23,15 @@ class UsersManager {
   async createUser(data) {
     try {
       if (!data.name || !data.email) {
-        throw new Error("Nombre e email requeridos");
+        const error = new Error("Nombre e email requeridos");
+        error.statusCode = 400;
+        throw error;
       }
       const event = {
         id: crypto.randomBytes(12).toString("hex"),
         name: data.name,
-        place: data.place,
-        price: data.price || 10,
-        capacity: data.capacity || 50,
-        date: data.date || new Date(),
+        photo: data.photo || "photo",
+        email: data.email,
       };
       this.users.push(event);
       const jsonData = JSON.stringify(this.users, null, 2);
@@ -39,42 +39,45 @@ class UsersManager {
       console.log("crear " + event.id);
       return event.id;
     } catch (error) {
-      console.log(error.message);
-      return error.message;
+      throw error;
     }
   }
   readUsers() {
     try {
       if (this.users.length === 0) {
-        throw new Error("No se encontraron usuarios!");
+        const error = new Error("No se encontraron usuarios!");
+        error.statusCode = 404;
+        throw error;
       } else {
         console.log(this.users);
         return this.users;
       }
     } catch (error) {
-      console.log(error.message);
-      return error.message;
+      throw error;
     }
   }
   readOne(id) {
     try {
       const one = this.users.find((each) => each.id === id);
       if (!one) {
-        throw new Error("no hay ningun usuario con id:" + id);
+        const error = new Error("No se encontraron usuarios!");
+        error.statusCode = 404;
+        throw error;
       } else {
         console.log("leer " + one);
         return one;
       }
     } catch (error) {
-      console.log(error.message);
-      return error.message;
+      throw error;
     }
   }
   async removeUserById(id) {
     try {
       let one = this.users.find((each) => each.id === id);
       if (!one) {
-        throw new Error("no hay ningun usuario");
+        const error = new Error("No se encontraron usuarios!");
+        error.statusCode = 404;
+        throw error;
       } else {
         this.users = this.users.filter((each) => each.id !== id);
         const jsonData = JSON.stringify(this.users, null, 2);
@@ -83,11 +86,36 @@ class UsersManager {
         return id;
       }
     } catch (error) {
-      console.log(error.message);
-      return error.message;
+      throw error;
+    }
+  }
+  async updateUser(userId, newData) {
+    try {
+      const userIndex = this.users.findIndex((user) => user.id === userId);
+
+      if (userIndex === -1) {
+        const error = new Error("No se encontraron usuarios!");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      const updatedUser = {
+        ...this.users[userIndex],
+        ...newData,
+      };
+
+      this.users[userIndex] = updatedUser;
+
+      const jsonData = JSON.stringify(this.users, null, 2);
+      await fs.promises.writeFile(this.path, jsonData);
+
+      console.log("Usuario actualizado:", productId);
+      return userId;
+    } catch (error) {
+      throw error;
     }
   }
 }
 
-const users = new UsersManager("./data/fs/files/users.json");
+const users = new UsersManager("./src/data/fs/files/users.json");
 export default users;
