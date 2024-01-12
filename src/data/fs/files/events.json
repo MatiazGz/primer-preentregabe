@@ -1,0 +1,18 @@
+[
+  {
+    "id": "c850f2765f69accb11ea0b03",
+    "name": "Mega Death",
+    "place": "showcase",
+    "price": 10,
+    "capacity": 50,
+    "date": "2023-12-21T02:01:35.325Z"
+  },
+  {
+    "id": "dd160fc996a0f3cf99984504",
+    "name": "Arctic Monkeys",
+    "place": "showcase",
+    "price": 10,
+    "capacity": 50,
+    "date": "2024-01-02T23:21:59.666Z"
+  }
+]

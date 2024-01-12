@@ -19,6 +19,7 @@ const datos = JSON.stringify([
     place: "showcase",
   },
 ]);
-fs.promises.writeFile(ruta, datos)
-.then((resultado)=>console.log(resultado))
-.catch((error)=>console.log("error"))
+fs.promises
+  .writeFile(ruta, datos)
+  .then((resultado) => console.log(resultado))
+  .catch((error) => console.log("error"));

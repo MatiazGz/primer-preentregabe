@@ -38,10 +38,10 @@ class UserManager {
   }
 }
 
-const users = new UserManager();
+const products = new UserManager();
 
 console.log(
-  users.createUser({
+  products.createUser({
     name: "Ronaldo",
     photo: "https://cdn.conmebol.com/wp-content/uploads/2018/05/r92.jpg",
     email: "ronaldonazario@outlook.com",
@@ -49,7 +49,7 @@ console.log(
 );
 
 console.log(
-  users.createUser({
+  products.createUser({
     name: "Raul",
     photo:
       "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Raul_Gonzalez_10mar2007.jpg/640px-Raul_Gonzalez_10mar2007.jpg",
