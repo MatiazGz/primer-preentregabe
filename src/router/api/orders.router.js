@@ -1,62 +1,57 @@
 import { Router } from "express";
-import orders from "../../data/fs/orders.manager";
+import { orders } from "../../data/mongo/managger.mongo.js";
 
 const ordersRouter = Router();
 
-ordersRouter.get("/", async (req, res, next) => {
+ordersRouter.post("/", async (req, res, next) => {
   try {
-    const all = await orders.readOrder();
-    if (Array.isArray(all)) {
-      return res.json({
-        statusCode: 200,
-        response: all,
-      });
-    } else {
-      return res.json({
-        statusCode: 404,
-        message: all,
-      });
-    }
+    const data = req.body;
+    const one = await orders.create(data);
+    return res.json({
+      statusCode: 201,
+      response: one,
+    });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
-ordersRouter.get("/:eid", async (req, res, next) => {
+ordersRouter.get("/:uid", async (req, res, next) => {
   try {
-    const { eid } = req.params;
-    const one = await orders.readOrderById(eid);
-    if (typeof one === "string") {
-      return res.json({
-        statusCode: 404,
-        message: one,
-      });
-    } else {
-      return res.json({
-        statusCode: 200,
-        response: one,
-      });
-    }
+    const { uid } = req.params;
+    const filter = { user_id: uid };
+    const all = await orders.read({ filter });
+    return res.json({
+      statusCode: 200,
+      response: all,
+    });
   } catch (error) {
-    next(error);
+    return next(error);
+  }
+});
+ordersRouter.put("/:oid", async (req, res, next) => {
+  try {
+    const { oid } = req.params;
+    const data = req.body;
+    const one = await orders.update(oid, data);
+    return res.json({
+      statusCode: 200,
+      response: one,
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+ordersRouter.delete("/:oid", async (req, res, next) => {
+  try {
+    const { oid } = req.params;
+    const one = await orders.destroy(oid);
+    return res.json({
+      statusCode: 200,
+      response: one,
+    });
+  } catch (error) {
+    return next(error);
   }
 });
 
-ordersRouter.delete("/:eid", async (req, res, next) => {
-  try {
-    const { eid } = req.params;
-    const response = await orders.removeOrderById(eid);
-    if (response === "no hay ninguna orden") {
-      return res.json({
-        statusCode: 404,
-        message: response,
-      });
-    } else {
-      return res.json({
-        statusCode: 200,
-        response,
-      });
-    }
-  } catch (error) {
-    next(error);
-  }
-});
+export default ordersRouter;

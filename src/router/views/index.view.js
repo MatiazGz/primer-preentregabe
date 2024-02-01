@@ -7,7 +7,7 @@ const viewsRouter = Router();
 viewsRouter.get("/", (req, res, next) => {
   try {
     const mainProducts = ["Arctic Monkeys", "Mega Death"];
-    return res.render("index", { products: mainProducts });
+    return res.render("index", { products: mainProducts, title: "INDEX" });
   } catch (error) {
     next(error);
   }

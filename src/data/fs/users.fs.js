@@ -115,6 +115,22 @@ class UsersManager {
       throw error;
     }
   }
+  readByEmail(email) {
+    try {
+      const one = this.users.find((each) => each.email === email);
+      if (!one) {
+        const error = new Error("Usuario no encontrado!");
+        error.statusCode = 404;
+        throw error;
+      } else {
+        console.log("leer por email " + one.email);
+        return one;
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
 }
 
 const users = new UsersManager("./src/data/fs/files/users.json");

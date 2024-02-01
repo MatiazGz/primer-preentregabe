@@ -1,12 +1,12 @@
+import propsEventsUtils from "../utils/propsEvents.utils.js";
+
 function propsEvents(req, res, next) {
-  const { title, photo } = req.body;
-  if (!title || !photo) {
-    return res.json({
-      satusCode: 400,
-      message: `${req.method} ${req.url} nombre y foto requeridos`,
-    });
-  } else {
-    return next();
+  try {
+    propsEventsUtils(req.body)
+    return next()
+  } catch (error) {
+    return next(error)
   }
 }
+
 export default propsEvents;

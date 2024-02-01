@@ -1,7 +1,5 @@
 import fs from "fs";
 import crypto from "crypto";
-import products from "./product.manager.fs";
-import users from "./users.fs";
 
 class OrderManager {
   init() {
@@ -121,4 +119,4 @@ class OrderManager {
     }
   }
 }
-export default orders;
+export default OrderManager;

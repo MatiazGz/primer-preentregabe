@@ -3,10 +3,25 @@ import users from "../../data/fs/users.fs.js";
 
 const usersRouter = Router();
 
-usersRouter.use("/profile", (req, res, next) => {
+usersRouter.get("/chat", (req, res, next) => {
   try {
-    const one = users.readOne("2f5c4433550e00754c2a3bc4");
-    return res.render("profile", { user: one });
+    return res.render("chat", {});
+  } catch (error) {
+    next(error);
+  }
+});
+
+usersRouter.get("/:uid", (req, res, next) => {
+  try {
+    const { uid } = req.params;
+    const one = users.readOne(uid);
+    if (!one) {
+      return res.render("usuario no encontrado", {
+        not: "User",
+        title: "NOT FOUND",
+      });
+    }
+    return res.render("profile", { profile: one, title: "PROFILE" });
   } catch (error) {
     next(error);
   }
