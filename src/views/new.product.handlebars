@@ -1,21 +1,55 @@
-<div class="form-floating mb-3">
-  <input type="text" class="form-control" id="floatingInput" placeholder="titulo">
-  <label for="floatingInput">Titulo</label>
-</div>
-<div class="form-floating">
-  <input type="text" class="form-control" id="floatingPhoto" placeholder="foto">
-  <label for="floatingPhoto">Foto</label>
-</div>
-<div class="form-floating">
-  <input type="number" class="form-control" id="floatingPhoto" placeholder="precio">
-  <label for="floatingPhoto">Precio</label>
-</div>
-<div class="form-floating">
-  <input type="number" class="form-control" id="floatingPhoto" placeholder="stock">
-  <label for="floatingPhoto">Stock</label>
-</div>
-<div>
-    <button id="newProduct" type="button" class=" w-100 btn btn-secondary">CREAR</button>
-</div>
+<main class="d-flex">
+  <div class="form-floating mb-3">
+    <label for="title">Titulo</label>
+    <input
+      type="text"
+      class="form-control"
+      id="title"
+      placeholder="titulo"
+    />
+  </div>
+  <div class="form-floating">
+    <label for="photo">Foto</label>
+    <input
+      type="text"
+      class="form-control"
+      id="photo"
+      placeholder="foto"
+    />
+  </div>
+  <div class="form-floating">
+    <label for="price">Precio</label>
+    <input
+      type="number"
+      class="form-control"
+      id="price"
+      placeholder="precio"
+    />
+  </div>
+  <div class="form-floating">
+    <label for="stock">Stock</label>
+    <input
+      type="number"
+      class="form-control"
+      id="stock"
+      placeholder="stock"
+    />
+  </div>
+  <div>
+    <button
+      id="newItem"
+      type="button"
+      class="w-100 btn btn-secondary"
+    >CREAR</button>
+  </div>
+  <section class="w-50 mb-4" style="min-width: 400px;">
+    <h2 class="mt-5 mb-2 text-center">Productos</h2>
+    <article
+      id="items"
+      class="d-flex flex-wrap justify-content-evenly"
+    ></article>
+  </section>
+</main>
+
 <script src="/socket.io/socket.io.js"></script>
 <script src="/create.js"></script>

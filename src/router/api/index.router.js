@@ -11,4 +11,4 @@ apiRouter.use("/events", eventsRouter);
 apiRouter.use("/products", productsRouter);
 
 export default apiRouter;
-//exporto el enrutarod de la api para poder implementarlo en el enrutador del servidor
+//exporto el enrutador de la api para poder implementarlo en el enrutador del servidor
