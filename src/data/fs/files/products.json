@@ -1,1 +1,9 @@
-[]
+[
+  {
+    "id": "484d4d7fef13fa8692287a5f",
+    "title": "Iphone",
+    "photo": "ejemplo",
+    "price": 10,
+    "stock": 50
+  }
+]
