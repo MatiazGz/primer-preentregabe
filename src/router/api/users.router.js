@@ -20,7 +20,18 @@ usersRouter.post("/", async (req, res, next) => {
 });
 usersRouter.get("/", async (req, res, next) => {
   try {
-    const all = await users.read({});
+    const orderAndPaginate = {
+      limit: req.query.limit || 10,
+      page: req.query.page || 1,
+    };
+    const filter = {};
+    if (req.query.email) {
+      filter.email = new RegExp(req.query.email.trim(), "i");
+    }
+    if (req.query.name === "desc") {
+      orderAndPaginate.sort.name = -1;
+    }
+    const all = await users.read({ filter, orderAndPaginate });
     return res.json({
       statusCode: 200,
       response: all,

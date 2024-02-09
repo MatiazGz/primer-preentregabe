@@ -15,6 +15,18 @@ ordersRouter.post("/", async (req, res, next) => {
     return next(error);
   }
 });
+ordersRouter.get("/total/:uid", async (req, res, next) => {
+  try {
+    const { uid } = req.params;
+    const report = await orders.reportBill(uid);
+    return res.json({
+      statusCode: 200,
+      response: report,
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
 ordersRouter.get("/:uid", async (req, res, next) => {
   try {
     const { uid } = req.params;
