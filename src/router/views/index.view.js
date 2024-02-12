@@ -1,12 +1,13 @@
 import { Router } from "express";
+import { products } from "../../data/mongo/managger.mongo.js";
 import productsRouter from "./products.view.js";
-import usersRouter from "./users.view.js";
+import usersRouter from "./register.view.js";
 
 const viewsRouter = Router();
 
-viewsRouter.get("/", (req, res, next) => {
+viewsRouter.get("/", async (req, res, next) => {
   try {
-    const mainProducts = ["Arctic Monkeys", "Mega Death"];
+    const mainProducts = await products.read({});
     return res.render("index", { products: mainProducts, title: "INDEX" });
   } catch (error) {
     next(error);
@@ -14,6 +15,6 @@ viewsRouter.get("/", (req, res, next) => {
 });
 
 viewsRouter.use("/products", productsRouter);
-viewsRouter.use("/users", usersRouter);
+viewsRouter.use("/register", usersRouter);
 
 export default viewsRouter;
