@@ -1,6 +1,6 @@
 export default (req,res,next)=>{
     try {
-      const { role } = req.body
+      const { role } = req.session;
       if (role==="admin") {
         return next()
       } else {

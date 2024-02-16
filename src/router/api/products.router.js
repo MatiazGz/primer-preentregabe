@@ -1,11 +1,14 @@
 import { Router } from "express";
 import { products } from "../../data/mongo/managger.mongo.js";
+import propsProducts from "../../middlewares/propsProducts.mid.js"
+import isAdmin from "../../middlewares/isAdmin.mid.js";
+
 
 const productsRouter = Router();
 
 //definir los endpoints (POST, GET,PUT, DELETE)
 
-productsRouter.post("/", async (req, res, next) => {
+productsRouter.post("/", isAdmin, propsProducts, async (req, res, next) => {
   try {
     const data = req.body;
     const response = await products.create(data);
