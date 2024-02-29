@@ -9,7 +9,7 @@ import cookieParser from "cookie-parser";
 import expressSession from "express-session";
 import sessionFileStore from "session-file-store";
 import MongoStore from "connect-mongo";
-import dbConnection from "./src/utils/db.js";
+import dbConnection from "./src/utils/db.utils.js";
 import socketUtils from "./src/utils/socket.utils.js";
 import errorHandler from "./src/middlewares/errorHandler.mid.js";
 import pathHandler from "./src/middlewares/pathHandler.mid.js";

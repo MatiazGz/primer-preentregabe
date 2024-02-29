@@ -74,16 +74,9 @@ class MongoManagger {
       throw error;
     }
   }
-  async readByField(email, value) {
+  async readByField(email) {
     try {
-      const filter = { [email]: value };
-      const one = await this.model.find(filter);
-
-      if (one.length === 0) {
-        const error = new Error(`No documents found with ${email}: ${value}`);
-        error.statusCode = 404;
-        throw error;
-      }
+      const one = await this.model.findOne({ email });
 
       return one;
     } catch (error) {
