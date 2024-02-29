@@ -45,37 +45,37 @@ passport.use(
     }
   )
 );
-passport.use(
-  {
-    passReqToCallback: true,
-    clientID: GOOGLE_ID,
-    clienrSecret: GOOGLE_CLIENT,
-    callbackURL: "http://localhost:8080/api/sessions/google/callback",
-  },
-  async (req, accessToken, refreshToken, profile, done) => {
-    try {
-      let user = await users.readByField(profile.id);
-      if (user) {
-        req.session.email = profile.id;
-        req.session.role = user.role;
-        return done(null, user);
-      } else {
-        user = {
-          email: profile.id,
-          name: profile.name.givenName,
-          lastName: profile.name.familyName,
-          photo: profile.coverPhoto,
-          password: createHash(profile.id),
-        };
-        user = await users.create(user);
-        req.session.email = user.email;
-        req.session.role = user.role;
-        return done(null, user);
-      }
-    } catch (error) {
-      return done(error);
-    }
-  }
-);
+// passport.use(
+//   {
+//     passReqToCallback: true,
+//     clientID: GOOGLE_ID,
+//     clienrSecret: GOOGLE_CLIENT,
+//     callbackURL: "http://localhost:8080/api/sessions/google/callback",
+//   },
+//   async (req, accessToken, refreshToken, profile, done) => {
+//     try {
+//       let user = await users.readByField(profile.id);
+//       if (user) {
+//         req.session.email = profile.id;
+//         req.session.role = user.role;
+//         return done(null, user);
+//       } else {
+//         user = {
+//           email: profile.id,
+//           name: profile.name.givenName,
+//           lastName: profile.name.familyName,
+//           photo: profile.coverPhoto,
+//           password: createHash(profile.id),
+//         };
+//         user = await users.create(user);
+//         req.session.email = user.email;
+//         req.session.role = user.role;
+//         return done(null, user);
+//       }
+//     } catch (error) {
+//       return done(error);
+//     }
+//   }
+// );
 
 export default passport;
