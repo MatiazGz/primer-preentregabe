@@ -1,5 +1,5 @@
 const params = new URLSearchParams(location.search);
-let selector = document.querySelector("#text");
+const selector = document.querySelector("#text");
 selector.value = params.get("title");
 document.querySelector("#search").addEventListener("click", async (product) => {
   try {

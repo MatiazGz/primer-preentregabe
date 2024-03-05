@@ -29,7 +29,7 @@ sessionsRouter.post("/login", passCallBack("login"), async (req, res, next) => {
   try {
     return res
       .cookie("token", req.token, {
-        maxAge: 7 * 24 * 60 * 60,
+        maxAge: 20,
         httpOnly: true,
       })
       .json({
