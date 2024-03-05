@@ -1,7 +1,4 @@
 <main class="flex-grow-1 m-auto d-flex flex-column">
-  <section id="background">
-    <h1 class="title">ENGANCHADOS</h1>
-  </section>
   <h2 class="subtitle mt-4 mb-2 text-center">NUESTROS PRODUCTOS</h2>
   <section
     id="items"
@@ -9,10 +6,14 @@
   >
 
     {{#each products}}
-      <a href="/product/{{this._id}}" class="card m-2 anchor" style="width: 360px">
+      <a
+        href="/products/{{this._id}}"
+        class="card m-2 anchor"
+        style="width: 360px"
+      >
         <img
           src="{{this.photo}}"
-          style="height: 250px"
+          style="height: 240px"
           class="card-img-top object-fit-cover"
           alt="{{this.title}}"
         />

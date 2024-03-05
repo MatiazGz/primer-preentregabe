@@ -1,10 +1,8 @@
 import { Router } from "express";
-import { users } from "../../data/mongo/managger.mongo.js";
-
 import has8char from "../../middlewares/has8char.mid.js";
-import isValidPass from "../../middlewares/isValidPass.mid.js";
 import passport from "../../middlewares/passport.mid.js";
 import sesionsRouter from "../views/sessions.view.js";
+import passCallBack from "../../middlewares/PassCallBack.mid.js";
 
 const sessionsRouter = Router();
 
@@ -12,10 +10,7 @@ const sessionsRouter = Router();
 sessionsRouter.post(
   "/register",
   has8char,
-  passport.authenticate("register", {
-    session: false,
-    failureRedirect: "/api/session/badauth",
-  }),
+  passCallBack("register"),
   async (req, res, next) => {
     try {
       return res.json({
@@ -30,9 +25,27 @@ sessionsRouter.post(
 
 //login
 
-sessionsRouter.post(
-  "/login",
-  passport.authenticate("login", {
+sessionsRouter.post("/login", passCallBack("login"), async (req, res, next) => {
+  try {
+    return res
+      .cookie("token", req.token, {
+        maxAge: 7 * 24 * 60 * 60,
+        httpOnly: true,
+      })
+      .json({
+        statusCode: 200,
+        message: "Logged in!",
+        token: req.token,
+      });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+//github-callback
+sessionsRouter.get(
+  "/github/callback",
+  passport.authenticate("github", {
     session: false,
     failureRedirect: "/api/sessions/badauth",
   }),
@@ -40,8 +53,8 @@ sessionsRouter.post(
     try {
       return res.json({
         statusCode: 200,
-        message: "Logged in!",
-        token: req.token,
+        message: "Logged in with github!",
+        session: req.session,
       });
     } catch (error) {
       return next(error);
@@ -49,37 +62,30 @@ sessionsRouter.post(
   }
 );
 
+
 //me
-sessionsRouter.post("/", async (req, res, next) => {
+sessionsRouter.post("/", passCallBack("jwt"), async (req, res, next) => {
   try {
-    if (req.sessionID.email) {
-      return res.json({
-        statusCode: 200,
-        message: " Session with email: " + req.session.email,
-      });
-    } else {
-      const error = new Error("No Auth");
-      error.statusCode = 400;
-      throw error;
+    const user = {
+      email: req.user.email,
+      role: req.user.role,
+      photo: req.user.photo,
     }
+    return res.json({
+      statusCode: 200,
+      response: user
+    })
   } catch (error) {
     return next(error);
   }
 });
 //singout
-sessionsRouter.post("/singout", async (req, res, next) => {
+sesionsRouter.post("/signout", passCallBack("jwt"), async (req, res, next) => {
   try {
-    if (req.session.email) {
-      req.session.destroy();
-      return res.json({
-        statusCode: 200,
-        message: "Signed out!",
-      });
-    } else {
-      const error = new Error("No Auth");
-      error.statusCode = 400;
-      throw error;
-    }
+    return res.clearCookie("token").json({
+      statusCode: 200,
+      message: "Signed out!",
+    });
   } catch (error) {
     return next(error);
   }
@@ -98,3 +104,15 @@ sesionsRouter.get("/badauth", (req, res, next) => {
 });
 
 export default sessionsRouter;
+
+//signout/cb
+sessionsRouter.get("/signout/cb", (req, res, next) => {
+  try {
+    return res.json({
+      statusCode: 400,
+      message: " Already done",
+    });
+  } catch (error) {
+    return next(error);
+  }
+});

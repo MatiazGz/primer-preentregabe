@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { products } from "../../data/mongo/managger.mongo.js";
 import productsRouter from "./products.view.js";
-import profileRouter from "./profile.view.js"
 import sessionsRouter from "./sessions.view.js";
 
 const viewsRouter = Router();
@@ -35,6 +34,5 @@ viewsRouter.get("/", async (req, res, next) => {
 
 viewsRouter.use("/products", productsRouter);
 viewsRouter.use("/sessions", sessionsRouter);
-viewsRouter.use("/profile", profileRouter);
 
 export default viewsRouter;

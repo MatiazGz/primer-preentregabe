@@ -2,7 +2,6 @@ import notFoundOne from "../../utils/noFoundOne.utils.js";
 import Order from "./models/order.model.js";
 import Product from "./models/product.model.js";
 import User from "./models/user.model.js";
-import Event from "./models/events.models.js";
 import { Types } from "mongoose";
 
 class MongoManagger {
@@ -120,6 +119,6 @@ class MongoManagger {
 const products = new MongoManagger(Product);
 const users = new MongoManagger(User);
 const orders = new MongoManagger(Order);
-const events = new MongoManagger(Event);
 
-export { products, users, orders, events };
+export { products, users, orders };
+export default MongoManagger;

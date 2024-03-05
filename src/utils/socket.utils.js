@@ -2,8 +2,6 @@ import { socketServer } from "../../server.js";
 import products from "../data/fs/product.manager.fs.js";
 import propsProductsUtils from "./propsProducts.utils.js";
 
-const messages = [];
-
 export default (socket) => {
   console.log("client " + socket.id + " connected");
   socket.emit("products", products.readProducts());

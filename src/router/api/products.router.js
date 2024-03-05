@@ -1,14 +1,13 @@
 import { Router } from "express";
 import { products } from "../../data/mongo/managger.mongo.js";
-import propsProducts from "../../middlewares/propsProducts.mid.js"
 import isAdmin from "../../middlewares/isAdmin.mid.js";
-
+import PassCallBackMid from "../../middlewares/PassCallBack.mid.js";
 
 const productsRouter = Router();
 
 //definir los endpoints (POST, GET,PUT, DELETE)
 
-productsRouter.post("/", isAdmin, propsProducts, async (req, res, next) => {
+productsRouter.post("/", PassCallBackMid("jwt"), isAdmin, async (req, res, next) => {
   try {
     const data = req.body;
     const response = await products.create(data);
@@ -24,18 +23,20 @@ productsRouter.get("/", async (req, res, next) => {
   try {
     const orderAndPaginate = {
       limit: req.query.limit || 10,
-      page: req.query.page || 1,
+      page: req.query.page || 1,      
+      sort: { title: 1 },
+      lean: true
     };
     const filter = {};
     if (req.query.title) {
       filter.title = new RegExp(req.query.title.trim(), "i");
     }
-    if (req.query.price === "desc") {
-      orderAndPaginate.sort.price = -1;
+    if (req.query.sort === "desc") {
+      orderAndPaginate.sort.title = "desc";
     }
     const all = await products.read({ filter, orderAndPaginate });
     return res.json({
-      statusCode: 404,
+      statusCode: 200,
       message: all,
     });
   } catch (error) {
@@ -56,24 +57,13 @@ productsRouter.get("/:pid", async (req, res, next) => {
 });
 productsRouter.put("/:pid", async (req, res, next) => {
   try {
-    const { pid, quantity } = req.params;
-    const response = await products.update(quantity, pid);
-    if (typeof response === "number") {
+    const { pid } = req.params;
+    const data = req.body;
+    const response = await products.update(pid, data);
       return res.json({
         statusCode: 200,
-        response: "cantidad disponible: " + response,
+        response: response,
       });
-    } else if (response === "no queda disponibilidad de ese producto") {
-      return res.json({
-        statusCode: 404,
-        message: response,
-      });
-    } else {
-      return res.json({
-        statusCode: 400,
-        message: response,
-      });
-    }
   } catch (error) {
     return next(error);
   }
