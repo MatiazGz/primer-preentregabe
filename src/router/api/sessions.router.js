@@ -1,82 +1,118 @@
 import { Router } from "express";
-import { users } from "../../data/mongo/managger.mongo.js"
-
-import has8char from "../../middlewares/has8char.mid.js"
-import isValidPass from "../../middlewares/isValidPass.mid.js";
-
+import has8char from "../../middlewares/has8char.mid.js";
+import passport from "../../middlewares/passport.mid.js";
+import sesionsRouter from "../views/sessions.view.js";
+import passCallBack from "../../middlewares/PassCallBack.mid.js";
 
 const sessionsRouter = Router();
 
 //register
-sessionsRouter.post("/register", has8char, async (req, res, next) => {
+sessionsRouter.post(
+  "/register",
+  has8char,
+  passCallBack("register"),
+  async (req, res, next) => {
+    try {
+      return res.json({
+        statusCode: 201,
+        message: "Registered!",
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+);
+
+//login
+
+sessionsRouter.post("/login", passCallBack("login"), async (req, res, next) => {
   try {
-    const data = req.body;
-    await users.create(data);
+    return res
+      .cookie("token", req.token, {
+        maxAge: 20,
+        httpOnly: true,
+      })
+      .json({
+        statusCode: 200,
+        message: "Logged in!",
+        token: req.token,
+      });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+//github-callback
+sessionsRouter.get(
+  "/github/callback",
+  passport.authenticate("github", {
+    session: false,
+    failureRedirect: "/api/sessions/badauth",
+  }),
+  async (req, res, next) => {
+    try {
+      return res.json({
+        statusCode: 200,
+        message: "Logged in with github!",
+        session: req.session,
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+);
+
+
+//me
+sessionsRouter.post("/", passCallBack("jwt"), async (req, res, next) => {
+  try {
+    const user = {
+      email: req.user.email,
+      role: req.user.role,
+      photo: req.user.photo,
+    }
     return res.json({
-      statusCode: 201,
-      message: "Registered!",
+      statusCode: 200,
+      response: user
+    })
+  } catch (error) {
+    return next(error);
+  }
+});
+//singout
+sesionsRouter.post("/signout", passCallBack("jwt"), async (req, res, next) => {
+  try {
+    return res.clearCookie("token").json({
+      statusCode: 200,
+      message: "Signed out!",
     });
   } catch (error) {
     return next(error);
   }
 });
 
-//login
-
-sessionsRouter.post("/login", isValidPass, async (req, res, next) => {
+//badauth
+sesionsRouter.get("/badauth", (req, res, next) => {
   try {
-    const { email, password } = req.body;
-    if (email && password === "hola1234") {
-      req.session.email = email;
-      req.session.role = "admin"
-      return res.json({
-        statusCode: 200,
-        message: "Logged in!",
-        session: req.session,
-      });
-    }
-    const error = new Error("Bad Auth");
-    error.statusCode = 401;
-    throw error;
-  } catch (error) {
-    return next(error);
-  }
-});
-
-//me
-sessionsRouter.post("/", async (req, res, next) => {
-  try {
-    if (req.sessionID.email) {
-      return res.json({
-        statusCode: 200,
-        message: " Session with email: " + req.session.email,
-      });
-    } else {
-      const error = new Error("No Auth");
-      error.statusCode = 400;
-      throw error;
-    }
-  } catch (error) {
-    return next(error);
-  }
-});
-//singout
-sessionsRouter.post("/singOut", async (req, res, next) => {
-  try {
-    if (req.session.email) {
-      req.session.destroy();
-      return res.json({
-        statusCode: 200,
-        message: "Signed out!",
-      });
-    } else {
-      const error = new Error("No Auth");
-      error.statusCode = 400;
-      throw error;
-    }
+    return res.json({
+      statusCode: 401,
+      message: " Bad auth",
+    });
   } catch (error) {
     return next(error);
   }
 });
 
 export default sessionsRouter;
+
+//signout/cb
+sessionsRouter.get("/signout/cb", (req, res, next) => {
+  try {
+    return res.json({
+      statusCode: 400,
+      message: " Already done",
+    });
+  } catch (error) {
+    return next(error);
+  }
+});

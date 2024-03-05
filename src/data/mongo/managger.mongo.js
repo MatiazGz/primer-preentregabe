@@ -2,7 +2,6 @@ import notFoundOne from "../../utils/noFoundOne.utils.js";
 import Order from "./models/order.model.js";
 import Product from "./models/product.model.js";
 import User from "./models/user.model.js";
-import Event from "./models/events.models.js";
 import { Types } from "mongoose";
 
 class MongoManagger {
@@ -74,16 +73,9 @@ class MongoManagger {
       throw error;
     }
   }
-  async readByField(email, value) {
+  async readByField(email) {
     try {
-      const filter = { [email]: value };
-      const one = await this.model.find(filter);
-
-      if (one.length === 0) {
-        const error = new Error(`No documents found with ${email}: ${value}`);
-        error.statusCode = 404;
-        throw error;
-      }
+      const one = await this.model.findOne({ email });
 
       return one;
     } catch (error) {
@@ -127,6 +119,6 @@ class MongoManagger {
 const products = new MongoManagger(Product);
 const users = new MongoManagger(User);
 const orders = new MongoManagger(Order);
-const events = new MongoManagger(Event);
 
-export { products, users, orders, events };
+export { products, users, orders };
+export default MongoManagger;

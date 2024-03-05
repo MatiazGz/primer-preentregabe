@@ -22,14 +22,15 @@ usersRouter.get("/", async (req, res, next) => {
   try {
     const orderAndPaginate = {
       limit: req.query.limit || 10,
-      page: req.query.page || 1,
+      page: req.query.page || 1,      
+      sort: { email: 1 },
     };
     const filter = {};
     if (req.query.email) {
       filter.email = new RegExp(req.query.email.trim(), "i");
     }
-    if (req.query.name === "desc") {
-      orderAndPaginate.sort.name = -1;
+    if (req.query.sort === "desc") {
+      orderAndPaginate.email = "desc";
     }
     const all = await users.read({ filter, orderAndPaginate });
     return res.json({
