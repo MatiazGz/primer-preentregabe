@@ -2,7 +2,7 @@ import "dotenv/config.js";
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import router from "./src/router/index.router.js";
+import IndexRouter from "./src/router/index.router.js";
 import morgan from "morgan";
 import { engine } from "express-handlebars";
 import cookieParser from "cookie-parser";
@@ -79,7 +79,8 @@ server.use(express.urlencoded({ extended: true }));
 server.use(express.static("public"));
 server.use(morgan("dev"));
 //endpoints
-server.use("/", router);
+const router = new IndexRouter()
+server.use("/", router.getRouter());
 server.use(errorHandler);
 server.use(pathHandler);
 //socket
