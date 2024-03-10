@@ -3,7 +3,7 @@ import CustomRouter from "../CustomRouter.js";
 
 export default class OrdersRouter extends CustomRouter {
   init(){
-    this.create("/", async (req, res, next) => {
+    this.create("/",["PUBLIC"], async (req, res, next) => {
       try {
         const data = req.body;
         const one = await orders.create(data);
@@ -15,7 +15,7 @@ export default class OrdersRouter extends CustomRouter {
         return next(error);
       }
     });
-    this.read("/total/:uid", async (req, res, next) => {
+    this.read("/total/:uid",["PUBLIC"], async (req, res, next) => {
       try {
         const { uid } = req.params;
         const report = await orders.reportBill(uid);
@@ -27,7 +27,7 @@ export default class OrdersRouter extends CustomRouter {
         return next(error);
       }
     });
-    this.read("/:uid", async (req, res, next) => {
+    this.read("/:uid",["PUBLIC"], async (req, res, next) => {
       try {
         const { uid } = req.params;
         const filter = { user_id: uid };
@@ -40,7 +40,7 @@ export default class OrdersRouter extends CustomRouter {
         return next(error);
       }
     });
-    this.update("/:oid", async (req, res, next) => {
+    this.update("/:oid",["PUBLIC"], async (req, res, next) => {
       try {
         const { oid } = req.params;
         const data = req.body;
@@ -53,7 +53,7 @@ export default class OrdersRouter extends CustomRouter {
         return next(error);
       }
     });
-    this.destroy("/:oid", async (req, res, next) => {
+    this.destroy("/:oid",["PUBLIC"], async (req, res, next) => {
       try {
         const { oid } = req.params;
         const one = await orders.destroy(oid);

@@ -9,6 +9,7 @@ export default class SessionsRouter extends CustomRouter {
     //register
     this.create(
       "/register",
+      ["PUBLIC"],
       has8char,
       passCallBack("register"),
       async (req, res, next) => {
@@ -25,7 +26,7 @@ export default class SessionsRouter extends CustomRouter {
 
     //login
 
-    this.create("/login", passCallBack("login"), async (req, res, next) => {
+    this.create("/login",["PUBLIC"], passCallBack("login"), async (req, res, next) => {
       try {
         return res
           .cookie("token", req.token, {
@@ -63,7 +64,7 @@ export default class SessionsRouter extends CustomRouter {
     );
 
     //me
-    this.create("/", passCallBack("jwt"), async (req, res, next) => {
+    this.create("/",["PUBLIC"], passCallBack("jwt"), async (req, res, next) => {
       try {
         const user = {
           email: req.user.email,
@@ -79,7 +80,7 @@ export default class SessionsRouter extends CustomRouter {
       }
     });
     //singout
-    this.create("/signout", passCallBack("jwt"), async (req, res, next) => {
+    this.create("/signout",["PUBLIC"], passCallBack("jwt"), async (req, res, next) => {
       try {
         return res.clearCookie("token").json({
           statusCode: 200,
@@ -91,7 +92,7 @@ export default class SessionsRouter extends CustomRouter {
     });
 
     //badauth
-    this.read("/badauth", (req, res, next) => {
+    this.read("/badauth",["PUBLIC"], (req, res, next) => {
       try {
         return res.json({
           statusCode: 401,
@@ -102,7 +103,7 @@ export default class SessionsRouter extends CustomRouter {
       }
     });
     //signout/cb
-    this.read("/signout/cb", (req, res, next) => {
+    this.read("/signout/cb",["PUBLIC"], (req, res, next) => {
       try {
         return res.json({
           statusCode: 400,

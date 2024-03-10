@@ -54,7 +54,7 @@ export default class CustomRouter {
             (role === 1 && arrayOfPolicies.includes("ADMIN")) ||
             (role === 2 && arrayOfPolicies.includes("PREM"))
           ) {
-            const user = await users.readByEmail(email);
+            const user = await users.readByField(email);
             req.user = user;
             return next();
           } else return res.error403();
