@@ -9,6 +9,7 @@ import CategoriesRouter from "./categories.router.js";
 import SizesRouter from "./size.router.js";
 import SessionsRouter from "./sessions.router.js";
 import UsersRouter from "./users.router.js";
+import commentsRouter from "./comments.router.js";
 
 const session = new SessionsRouter();
 const users = new UsersRouter();
@@ -26,5 +27,6 @@ export default class ApiRouter extends CustomRouter {
     this.use("/clothes", clothes.getRouter());
     this.use("/categories", categories.getRouter());
     this.use("/sizes", sizes.getRouter());
+    this.use("/comments", commentsRouter)
   }
 }

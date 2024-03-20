@@ -1,4 +1,4 @@
-import "dotenv/config.js";
+import env from "./src/utils/env.util.js";
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
@@ -9,6 +9,8 @@ import cookieParser from "cookie-parser";
 import expressSession from "express-session";
 import sessionFileStore from "session-file-store";
 import MongoStore from "connect-mongo";
+import args from "./src/utils/args.util.js";
+import cors from "cors";
 import dbConnection from "./src/utils/db.utils.js";
 import socketUtils from "./src/utils/socket.utils.js";
 import errorHandler from "./src/middlewares/errorHandler.mid.js";
@@ -17,7 +19,7 @@ import __dirname from "./utils.js";
 
 const server = express();
 
-const PORT = process.env.PORT || 8080;
+const PORT = env.PORT || 8080;
 const ready = () => {
   console.log("server ready on port " + PORT);
   dbConnection();
@@ -74,12 +76,18 @@ server.use(cookieParser(process.env.SECRET_KEY));
 //     }),
 //   })
 // );
+server.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 server.use(express.static("public"));
 server.use(morgan("dev"));
 //endpoints
-const router = new IndexRouter()
+const router = new IndexRouter();
 server.use("/", router.getRouter());
 server.use(errorHandler);
 server.use(pathHandler);
