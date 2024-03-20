@@ -1,93 +1,18 @@
-import { Router } from "express";
-//import users from "../../data/fs/users.fs.js";
-import { users } from "../../data/mongo/managger.mongo.js";
+import CustomRouter from "../CustomRouter.js";
+import { create, read, readOne, readByField, update, destroy,} from "../../controllers/users.controller.js";
 
-const usersRouter = Router();
+export default class UsersRouter extends CustomRouter {
+  init() {
+    this.create("/", create);
 
-//definir los endpoints (POST, GET,PUT, DELETE)
+    this.read("/", read);
 
-usersRouter.post("/", async (req, res, next) => {
-  try {
-    const data = req.body;
-    const response = await users.create(data);
-    return res.json({
-      statusCode: 201,
-      response,
-    });
-  } catch (error) {
-    return next(error);
-  }
-});
-usersRouter.get("/", async (req, res, next) => {
-  try {
-    const orderAndPaginate = {
-      limit: req.query.limit || 10,
-      page: req.query.page || 1,
-    };
-    const filter = {};
-    if (req.query.email) {
-      filter.email = new RegExp(req.query.email.trim(), "i");
-    }
-    if (req.query.name === "desc") {
-      orderAndPaginate.sort.name = -1;
-    }
-    const all = await users.read({ filter, orderAndPaginate });
-    return res.json({
-      statusCode: 200,
-      response: all,
-    });
-  } catch (error) {
-    return next(error);
-  }
-});
-usersRouter.get("/:uid", async (req, res, next) => {
-  try {
-    const { uid } = req.params;
-    const one = await users.readOne(uid);
-    return res.json({
-      statusCode: 200,
-      message: one,
-    });
-  } catch (error) {
-    return next(error);
-  }
-});
-usersRouter.get("/:uem", async (req, res, next) => {
-  try {
-    const { uem } = req.params;
-    const one = await users.readByField(uem);
-    return res.json({
-      statusCode: 200,
-      message: one,
-    });
-  } catch (error) {
-    return next(error);
-  }
-});
-usersRouter.put("/:uid", async (req, res, next) => {
-  try {
-    const { uid } = req.params;
-    const data = req.body;
-    const one = await users.update(uid, data);
-    return res.json({
-      statusCode: 200,
-      response: one,
-    });
-  } catch (error) {
-    return next(error);
-  }
-});
-usersRouter.delete("/:uid", async (req, res, next) => {
-  try {
-    const { uid } = req.params;
-    const one = await users.destroy(uid);
-    return res.json({
-      statusCode: 200,
-      message: one,
-    });
-  } catch (error) {
-    return next(error);
-  }
-});
+    this.read("/:uid", readOne);
 
-export default usersRouter;
+    this.read("/:uem", readByField);
+
+    this.update("/:uid", update);
+
+    this.destroy("/:uid", destroy);
+  }
+}
