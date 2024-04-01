@@ -1,5 +1,5 @@
 import fs from "fs";
-import crypto from "crypto";
+import notFoundOne from "../../utils/noFoundOne.utils.js";
 
 class ProductManager {
   static #perGain = 0.3;
@@ -25,33 +25,20 @@ class ProductManager {
     this.products = [];
     this.init();
   }
-  async createProduct(data) {
+  async create(data) {
     try {
-      if (!data.title || !data.photo) {
-        const error = new Error("Se requiere nombre y foto");
-        error.statusCode = 400;
-        throw error;
-      }
-      const product = {
-        id: crypto.randomBytes(12).toString("hex"),
-        title: data.title,
-        photo: data.photo,
-        price: data.price || 10,
-        stock: data.stock || 50,
-      };
-      this.products.push(product);
+      this.products.push(data);
       const jsonData = JSON.stringify(this.products, null, 2);
       await fs.promises.writeFile(this.path, jsonData);
-      console.log("create " + product.id);
-      return product.id;
+      return data;
     } catch (error) {
       throw error;
     }
   }
-  readProducts() {
+  read({filter, options}) {
     try {
       if (this.products.length === 0) {
-        const error = new Error("No se encontraron productos!");
+        const error = new Error("NOT FOUND!");
         error.statusCode = 404;
         throw error;
       } else {
@@ -62,35 +49,28 @@ class ProductManager {
       throw error;
     }
   }
-  readProductById(id) {
+  readOne(id) {
     try {
-      const one = this.products.find((each) => each.id === id);
+      const one = this.products.find((each) => each._id === id);
       if (!one) {
-        const error = new Error("No se encontraron productos!");
+        const error = new Error("NOT FOUND!");
         error.statusCode = 404;
         throw error;
       } else {
-        console.log("leer " + one);
         return one;
       }
     } catch (error) {
       throw error;
     }
   }
-  async removeProductById(id) {
+  async destroy(id) {
     try {
-      let one = this.products.find((each) => each.id === id);
-      if (!one) {
-        const error = new Error("no hay ningun producto!");
-        error.statusCode = 400;
-        throw error;
-      } else {
-        this.products = this.products.filter((each) => each.id !== id);
-        const jsonData = JSON.stringify(this.products, null, 2);
-        await fs.promises.writeFile(this.path, jsonData);
-        console.log("borrado " + id);
-        return id;
-      }
+      const one = this.readOne(id)
+      notFoundOne(one)
+      this.products = this.products.filter((each) => each._id !== id);
+      const jsonData = JSON.stringify(this.products, null, 2);
+      await fs.promises.writeFile(this.path, jsonData);
+      return one;
     } catch (error) {
       throw error;
     }
@@ -118,30 +98,16 @@ class ProductManager {
       throw error;
     }
   }
-  async updateProduct(productId, newData) {
+  async update(pid, data) {
     try {
-      const productIndex = this.products.findIndex(
-        (product) => product.id === productId
-      );
-
-      if (productIndex === -1) {
-        const error = new Error("Producto no encontrado");
-        error.statusCode = 400;
-        throw error;
+      const one = this.products.readOne(pid); 
+      notFoundOne(one)
+      for (let each in data) {
+        one[each] = data[each]
       }
-
-      const updatedProduct = {
-        ...this.products[productIndex],
-        ...newData,
-      };
-
-      this.products[productIndex] = updatedProduct;
-
       const jsonData = JSON.stringify(this.products, null, 2);
       await fs.promises.writeFile(this.path, jsonData);
-
-      console.log("Producto actualizado:", productId);
-      return productId;
+      return one;
     } catch (error) {
       throw error;
     }

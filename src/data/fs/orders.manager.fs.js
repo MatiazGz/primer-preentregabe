@@ -1,7 +1,7 @@
 import fs from "fs";
 import notFoundOne from "../../utils/noFoundOne.utils.js";
 
-class UsersManager {
+class OrdersManager {
   init() {
     try {
       const exists = fs.existsSync(this.path);
@@ -9,7 +9,7 @@ class UsersManager {
         const data = JSON.stringify([], null, 2);
         fs.writeFileSync(this.path, data);
       } else {
-        this.users = JSON.parse(fs.readFileSync(this.path, "utf-8"));
+        this.orders = JSON.parse(fs.readFileSync(this.path, "utf-8"));
       }
     } catch (error) {
       throw error;
@@ -17,13 +17,13 @@ class UsersManager {
   }
   constructor(path) {
     this.path = path;
-    this.users = [];
+    this.orders = [];
     this.init();
   }
   async create(data) {
     try {
-      this.users.push(data);
-      const jsonData = JSON.stringify(this.users, null, 2);
+      this.orders.push(data);
+      const jsonData = JSON.stringify(this.orders, null, 2);
       await fs.promises.writeFile(this.path, jsonData);
       return data;
     } catch (error) {
@@ -32,12 +32,12 @@ class UsersManager {
   }
   read({ filter, options }) {
     try {
-      if (this.users.length === 0) {
+      if (this.orders.length === 0) {
         const error = new Error("NOT FOUND!");
         error.statusCode = 404;
         throw error;
       } else {
-        return this.users;
+        return this.orders;
       }
     } catch (error) {
       throw error;
@@ -45,23 +45,11 @@ class UsersManager {
   }
   readOne(id) {
     try {
-      const one = this.users.find((each) => each._id === id);
+      const one = this.orders.find((each) => each._id === id);
       if (!one) {
         const error = new Error("NOT FOUND!");
         error.statusCode = 404;
         throw error;
-      } else {
-        return one;
-      }
-    } catch (error) {
-      throw error;
-    }
-  }
-  readByField(email) {
-    try {
-      const one = this.users.find((each) => each.email === email);
-      if (!one) {
-        return null;
       } else {
         return one;
       }
@@ -76,7 +64,7 @@ class UsersManager {
       for (let each in data) {
         one[each] = data[each]
       }
-      const jsonData = JSON.stringify(this.users, null, 2);
+      const jsonData = JSON.stringify(this.orders, null, 2);
       await fs.promises.writeFile(this.path, jsonData);
       return one;
     } catch (error) {
@@ -87,8 +75,8 @@ class UsersManager {
     try {
       const one = this.readOne(id);
       notFoundOne(one)
-      this.users = this.users.filter((each) => each._id !== id);
-      const jsonData = JSON.stringify(this.users, null, 2);
+      this.orders = this.orders.filter((each) => each._id !== id);
+      const jsonData = JSON.stringify(this.orders, null, 2);
       await fs.promises.writeFile(this.path, jsonData);
       return one;
     } catch (error) {
@@ -97,5 +85,5 @@ class UsersManager {
   }
 }
 
-const users = new UsersManager("./src/data/fs/files/users.json");
-export default users;
+const orders = new OrdersManager("./src/data/fs/files/orders.json");
+export default orders;

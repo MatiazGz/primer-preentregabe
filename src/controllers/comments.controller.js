@@ -16,10 +16,21 @@ class CommentsController {
   };
   read = async (req, res, next) => {
     try {
+      const options = {
+        limit: req.query.limit || 20,
+        page: req.query.page || 1,
+        sort: { title: 1 },
+        lean: true,
+      };
       const filter = {};
-      const orderAndPaginate = {};
-      const all = await this.service.read({ filter, orderAndPaginate });
-      return success200(all);
+      if (req.query.product_id) {
+        filter.product_id = req.query.product_id;
+      }
+      if (req.query.sort === "desc") {
+        options.sort.title = "desc";
+      }
+      const all = await this.service.read({ filter, options });
+      return res.success200(all);
     } catch (error) {
       return next(error);
     }

@@ -11,6 +11,6 @@ export default class OrdersRouter extends CustomRouter {
 
     this.update("/:oid", ["PUBLIC"], update);
 
-    this.destroy("/:oid", ["PUBLIC"], update);
+    this.destroy("/:oid", ["PUBLIC"], destroy);
   }
 }

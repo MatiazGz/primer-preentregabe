@@ -1,10 +1,7 @@
 class SessionsController {
   register = async (req, res, next) => {
     try {
-      return res.json({
-        statusCode: 201,
-        message: "Registered!",
-      });
+      return res.success201("Registered!");
     } catch (error) {
       return next(error);
     }
@@ -14,14 +11,10 @@ class SessionsController {
     try {
       return res
         .cookie("token", req.token, {
-          maxAge: 20,
+          maxAge: 7 * 24 * 60 * 60 * 1000,
           httpOnly: true,
         })
-        .json({
-          statusCode: 200,
-          message: "Logged in!",
-          token: req.token,
-        });
+        .success200("Logged in!");
     } catch (error) {
       return next(error);
     }
@@ -29,11 +22,7 @@ class SessionsController {
 
   github = async (req, res, next) => {
     try {
-      return res.json({
-        statusCode: 200,
-        message: "Logged in with github!",
-        session: req.session,
-      });
+      return res.success200("Logged in with Github!");
     } catch (error) {
       return next(error);
     }
@@ -46,10 +35,7 @@ class SessionsController {
         role: req.user.role,
         photo: req.user.photo,
       };
-      return res.json({
-        statusCode: 200,
-        response: user,
-      });
+      return res.success200(user);
     } catch (error) {
       return next(error);
     }
@@ -57,10 +43,7 @@ class SessionsController {
 
   signout = async (req, res, next) => {
     try {
-      return res.clearCookie("token").json({
-        statusCode: 200,
-        message: "Signed out!",
-      });
+      return res.clearCookie("token").success200("Signed out!");
     } catch (error) {
       return next(error);
     }
@@ -68,10 +51,7 @@ class SessionsController {
 
   badauth = (req, res, next) => {
     try {
-      return res.json({
-        statusCode: 401,
-        message: " Bad auth",
-      });
+      return res.error401();
     } catch (error) {
       return next(error);
     }

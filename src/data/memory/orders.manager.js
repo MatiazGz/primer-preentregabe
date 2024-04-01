@@ -2,7 +2,7 @@ class OrderManager {
     static #orders = [];
     constructor() {}
   
-    createProduct({ pid, uid,quantity,state, ...data }) {
+    create({ pid, uid,quantity,state, ...data }) {
       try {
         if (!pid || !uid || quantity|| state) {
           throw new Error("no se puede continuar");

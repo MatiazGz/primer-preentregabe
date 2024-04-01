@@ -1,6 +1,6 @@
 import { Router } from "express";
 import jwt from "jsonwebtoken";
-import { users } from "../data/mongo/managger.mongo.js";
+import  users  from "../data/mongo/managger.mongo.js";
 
 export default class CustomRouter {
   constructor() {
@@ -24,20 +24,15 @@ export default class CustomRouter {
     });
   }
   responses = (req, res, next) => {
-    try {
-      res.message = (message) => res.json({ statusCode: 200, message });
-      res.success200 = (payload) =>
-        res.json({ statusCode: 200, response: payload });
-      res.success201 = (payload) =>
-        res.json({ statusCode: 201, response: payload });
-      res.error400 = (message) => res.json({ statusCode: 400, message });
-      res.error401 = () => res.json({ statusCode: 401, message: "Bad auth!" });
-      res.error403 = () => res.json({ statusCode: 403, message: "Forbidden!" });
-      res.error404 = () => res.json({ statusCode: 404, message: "Not found!" });
-      return next();
-    } catch (error) {
-      return next(error);
-    }
+    res.success200 = (payload) =>
+      res.json({ statusCode: 200, response: payload });
+    res.success201 = (payload) =>
+      res.json({ statusCode: 201, response: payload });
+    res.error400 = (message) => res.json({ statusCode: 400, message });
+    res.error401 = () => res.json({ statusCode: 401, message: "Bad auth!" });
+    res.error403 = () => res.json({ statusCode: 403, message: "Forbidden!" });
+    res.error404 = () => res.json({ statusCode: 404, message: "Not found!" });
+    return next();
   };
   policies = (arrayOfPolicies) => async (req, res, next) => {
     try {

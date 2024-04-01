@@ -13,9 +13,9 @@ class CommentsService {
     }
   };
 
-  read = async (filter, orderAndPaginate) => {
+  read = async (filter, options) => {
     try {
-      const response = await this.model.read(filter, orderAndPaginate);
+      const response = await this.model.read(filter, options);
       return response;
     } catch (error) {
       throw error;

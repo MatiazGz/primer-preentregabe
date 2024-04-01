@@ -3,16 +3,16 @@ import { create, read, readOne, readByField, update, destroy,} from "../../contr
 
 export default class UsersRouter extends CustomRouter {
   init() {
-    this.create("/", create);
+    this.create("/", ["PUBLIC"], create);
 
-    this.read("/", read);
+    this.read("/", ["ADMIN"], read);
 
-    this.read("/:uid", readOne);
+    this.read("/:uid", ["USER", "PREM"], readOne);
 
-    this.read("/:uem", readByField);
+    this.read("/:uem", ["USER", "PREM"], readByField);
 
-    this.update("/:uid", update);
+    this.update("/:uid", ["USER", "PREM"], update);
 
-    this.destroy("/:uid", destroy);
+    this.destroy("/:uid", ["USER", "PREM"],destroy);
   }
 }

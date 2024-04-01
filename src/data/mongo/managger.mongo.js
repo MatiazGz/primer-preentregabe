@@ -4,7 +4,6 @@ import Comment from "./models/comment.model.js";
 import Product from "./models/product.model.js";
 import User from "./models/user.model.js";
 import Clothe from "./models/clothe.model.js";
-import Size from "./models/size.model.js";
 import Category from "./models/category.model.js";
 import { Types } from "mongoose";
 
@@ -15,16 +14,16 @@ class MongoManagger {
   async create(data) {
     try {
       const one = await this.model.create(data);
-      return one._id;
+      return one;
     } catch (error) {
       throw error;
     }
   }
-  async read(filter, orderAndPaginate) {
+  async read({filter, options}) {
     try {
-      const all = await this.model.paginate(filter, orderAndPaginate);
+      const all = await this.model.paginate(filter, options);
       if (all.totalPages === 0) {
-        const error = new Error("There aren't any document");
+        const error = new Error("NOT FOUND!");
         error.statusCode = 404;
         throw error;
       }
@@ -70,7 +69,7 @@ class MongoManagger {
   }
   async readOne(id) {
     try {
-      const one = await this.model.findById(id);
+      const one = await this.model.findById(id).lean();
       notFoundOne(one);
       return one;
     } catch (error) {
@@ -125,8 +124,7 @@ const users = new MongoManagger(User);
 const orders = new MongoManagger(Order);
 const comments = new MongoManagger(Comment);
 const clothes = new MongoManagger(Clothe);
-const sizes = new MongoManagger(Size);
 const categories = new MongoManagger(Category)
 
-export { products, users, orders, sizes,categories, clothes, comments };
+export { products, users, orders, categories, clothes, comments };
 export default MongoManagger;

@@ -1,13 +1,13 @@
 import CustomRouter from "../CustomRouter.js";
-import { products } from "../../data/mongo/managger.mongo.js";
+import products from "../../data/mongo/products.mongo.js";
 import productsRouter from "./products.view.js";
 import sessionsRouter from "./sessions.view.js";
-//import ordersRouter from "./orders.view.js";
+import ordersRouter from "./orders.view.js";
 
 export default class ViewsRouter extends CustomRouter {
   init() {
     this.router.use("/products", productsRouter);
-    //this.router.use("/orders", ordersRouter);
+    this.router.use("/orders", ordersRouter);
     this.router.use("/sessions", sessionsRouter);
     this.read("/", ["PUBLIC"], async (req, res, next) => {
       try {

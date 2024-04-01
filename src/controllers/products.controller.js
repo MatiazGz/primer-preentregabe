@@ -2,12 +2,12 @@ import service from "../services/products.service.js"
 
 class ProductsController {
   constructor() {
-    this.model = service;
+    this.service = service;
   }
   create = async (req, res, next) => {
     try {
       const data = req.body;
-      const response = await this.model.create(data);
+      const response = await this.service.create(data);
       return res.success201(response);
     } catch (error) {
       return next(error);
@@ -16,7 +16,7 @@ class ProductsController {
 
   read = async (req, res, next) => {
     try {
-      const orderAndPaginate = {
+      const options = {
         limit: req.query.limit || 10,
         page: req.query.page || 1,
         sort: { title: 1 },
@@ -27,9 +27,9 @@ class ProductsController {
         filter.title = new RegExp(req.query.title.trim(), "i");
       }
       if (req.query.sort === "desc") {
-        orderAndPaginate.sort.title = "desc";
+        options.sort.title = "desc";
       }
-      const all = await this.model.read({ filter, orderAndPaginate });
+      const all = await this.service.read({ filter, options });
       return res.success200(all);
     } catch (error) {
       return next(error);
@@ -39,7 +39,7 @@ class ProductsController {
   readOne = async (req, res, next) => {
     try {
       const { pid } = req.params;
-      const one = await this.model.readOne(pid);
+      const one = await this.service.readOne(pid);
       return res.success200(one);
     } catch (error) {
       return next(error);
@@ -50,7 +50,7 @@ class ProductsController {
     try {
       const { pid } = req.params;
       const data = req.body;
-      const response = await this.model.update(pid, data);
+      const response = await this.service.update(pid, data);
       return res.success200(response);
     } catch (error) {
       return next(error);
@@ -60,7 +60,7 @@ class ProductsController {
   destroy = async (req, res, next) => {
     try {
       const { pid } = req.params;
-      const response = await this.model.destroy(pid);
+      const response = await this.service.destroy(pid);
       return res.success200(response);
     } catch (error) {
       return next(error);
