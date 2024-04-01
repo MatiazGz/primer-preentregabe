@@ -11,7 +11,7 @@ switch (environment) {
   case "test":
     //vamos a usar MEMORY
     console.log("MEMORY CONNECTED");
-    const { default: productsMemory } = await import("./memory/product.manager.memory.js")
+    const { default: productsMemory } = await import("./memory/products.memory.js")
     dao = { products: productsMemory }
     break;
   case "dev":

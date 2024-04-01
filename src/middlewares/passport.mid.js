@@ -40,7 +40,8 @@ passport.use(
     async (req, email, password, done) => {
       try {
         const user = await users.readByField(email);
-        if (user && verifyHash(password, user.password)) {
+        const verify = verifyHash(password, user.password);
+        if (user?.verified && verify ) {
           const token = createToken({ email, role: user.role });
           req.token = token;
           return done(null, user);

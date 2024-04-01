@@ -10,6 +10,7 @@ import {
   signout,
   badauth,
   badauthcb,
+  verifyAccount,
 } from "../../controllers/sessions.controller.js";
 
 export default class SessionsRouter extends CustomRouter {
@@ -29,5 +30,7 @@ export default class SessionsRouter extends CustomRouter {
     this.read("/badauth", ["PUBLIC"], badauth);
     //signout/cb
     this.read("/signout/cb", ["PUBLIC"], badauthcb);
+    //verify
+    this.create("/verified", ["PUBLIC"], verifyAccount);
   }
 }

@@ -1,3 +1,4 @@
+import service from "../services/users.service.js";
 class SessionsController {
   register = async (req, res, next) => {
     try {
@@ -67,9 +68,29 @@ class SessionsController {
       return next(error);
     }
   };
+  verifyAccount = async (req, res, next) => {
+    try {
+      const { email, verifiedCode } = req.body;
+      const user = await service.readByField(email);
+      if (user.verifiedCode === verifiedCode) {
+        await service.update(user._id, { verified: true });
+        return res.json({
+          statusCode: 200,
+          message: "verified user!",
+        });
+      }else {
+        res.json({
+          statusCode: 400,
+          message: "Invalid verified token"
+        })
+      }
+    } catch (error) {
+      return next(error);
+    }
+  };
 }
 
 export default SessionsController;
 const controller = new SessionsController();
-const { register, login, github, me, signout, badauth, badauthcb } = controller;
-export { register, login, github, me, signout, badauth, badauthcb };
+const { register, login, github, me, signout, badauth, badauthcb, verifyAccount } = controller;
+export { register, login, github, me, signout, badauth, badauthcb, verifyAccount };

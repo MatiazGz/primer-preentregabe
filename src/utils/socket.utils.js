@@ -9,7 +9,7 @@ export default (socket) => {
     try {
       propsProductsUtils(data);
       await products.createProduct(data);
-      socketServer.emit("items", products.readProducts());
+      socketServer.emit("items", products.read());
     } catch (error) {
       console.log(error);
     }
