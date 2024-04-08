@@ -5,7 +5,7 @@ async function sendEmail(data) {
     console.log(data);
     const transport = createTransport({
       service: "gmail",
-      port: process.env.PORT,
+      port: env.PORT,
       auth: {
         user: process.env.GOOGLE_EMAIL,
         pass: process.env.GOOGLE_PASSWORD,

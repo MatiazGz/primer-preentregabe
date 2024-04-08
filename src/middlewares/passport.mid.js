@@ -4,8 +4,9 @@ import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as GithubStrategy } from "passport-github2";
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
 import { createHash, verifyHash } from "../utils/hash.utils.js";
-import { users } from "../data/mongo/managger.mongo.js";
 import { createToken } from "../utils/token.utils.js";
+import repository from "../repositories/user.rep.js";
+
 const { GOOGLE_ID, GOOGLE_CLIENT, GITHUB_ID, GITHUB_CLIENT, SECRET } =
   process.env;
 
@@ -15,11 +16,11 @@ passport.use(
     { passReqToCallback: true, usernameField: "email" },
     async (req, email, password, done) => {
       try {
-        let one = await users.readByField(email);
+        let one = await repository.readByField(email);
         if (!one) {
           let data = req.body;
           data.password = createHash(password);
-          let user = await users.create(data);
+          let user = await repository.create(data);
           return done(null, user);
         } else {
           return done(null, false, {
@@ -39,8 +40,8 @@ passport.use(
     { passReqToCallback: true, usernameField: "email" },
     async (req, email, password, done) => {
       try {
-        const user = await users.readByField(email);
-        const verify = verifyHash(password, user.password);
+        const user = await repository.readByField(email);
+        let verify = verifyHash(password, user.password);
         if (user?.verified && verify ) {
           const token = createToken({ email, role: user.role });
           req.token = token;
@@ -63,7 +64,7 @@ passport.use(
 //   },
 //   async (req, accessToken, refreshToken, profile, done) => {
 //     try {
-//       let user = await users.readByField(profile.id);
+//       let user = await repository.readByField(profile.id);
 //       if (user) {
 //         req.session.email = profile.id;
 //         req.session.role = user.role;
@@ -76,7 +77,7 @@ passport.use(
 //           photo: profile.coverPhoto,
 //           password: createHash(profile.id),
 //         };
-//         user = await users.create(user);
+//         user = await repository.create(user);
 //         req.session.email = user.email;
 //         req.session.role = user.role;
 //         return done(null, user);
@@ -97,7 +98,7 @@ passport.use(
     },
     async (req, accessToken, refreshToken, profile, done) => {
       try {
-        let user = await users.readByField(profile.id + "@github.com");
+        let user = await repository.readByField(profile.id + "@github.com");
         if (!user) {
           user = {
             email: profile.id + "@github.com",
@@ -105,7 +106,7 @@ passport.use(
             photo: profile._json.avatar_url,
             password: createHash(profile.id),
           };
-          user = await users.create(user);
+          user = await repository.create(user);
         }
         req.session.email = user.email;
         req.session.role = user.role;
@@ -127,7 +128,7 @@ passport.use(
     },
     async (payload, done) => {
       try {
-        const user = await users.readByField(payload.email);
+        const user = await repository.readByField(payload.email);
         if (user) {
           user.password = null;
           return done(null, user);

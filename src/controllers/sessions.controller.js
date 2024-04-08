@@ -1,6 +1,8 @@
 import service from "../services/users.service.js";
 class SessionsController {
   register = async (req, res, next) => {
+    const { email, name } = req.body
+    await this.service.register({ email, name })
     try {
       return res.success201("Registered!");
     } catch (error) {
@@ -12,7 +14,7 @@ class SessionsController {
     try {
       return res
         .cookie("token", req.token, {
-          maxAge: 7 * 24 * 60 * 60 * 1000,
+          maxAge: 60 * 60 * 24 * 7,
           httpOnly: true,
         })
         .success200("Logged in!");

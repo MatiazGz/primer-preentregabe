@@ -31,6 +31,6 @@ export default class SessionsRouter extends CustomRouter {
     //signout/cb
     this.read("/signout/cb", ["PUBLIC"], badauthcb);
     //verify
-    this.create("/verified", ["PUBLIC"], verifyAccount);
+    this.create("/verified", verifyAccount);
   }
 }
