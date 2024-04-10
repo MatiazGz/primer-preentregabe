@@ -1,9 +1,7 @@
 import notFoundOne from "../../utils/noFoundOne.utils.js";
 import Order from "./models/order.model.js";
-import Comment from "./models/comment.model.js";
 import Product from "./models/product.model.js";
 import User from "./models/user.model.js";
-import Clothe from "./models/clothe.model.js";
 import Category from "./models/category.model.js";
 import { Types } from "mongoose";
 
@@ -122,9 +120,9 @@ class MongoManagger {
 const products = new MongoManagger(Product);
 const users = new MongoManagger(User);
 const orders = new MongoManagger(Order);
-const comments = new MongoManagger(Comment);
-const clothes = new MongoManagger(Clothe);
+//const comments = new MongoManagger(Comment);
+//const clothes = new MongoManagger(Clothe);
 const categories = new MongoManagger(Category)
 
-export { products, users, orders, categories, clothes, comments };
+  export { products, users, orders, categories,} //clothes, comments };
 export default MongoManagger;

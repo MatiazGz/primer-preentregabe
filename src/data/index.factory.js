@@ -9,12 +9,6 @@ let dao = {};
 
 switch (environment) {
   case "test":
-    //vamos a usar MEMORY
-    console.log("MEMORY CONNECTED");
-    const { default: productsMemory } = await import("./memory/products.memory.js")
-    dao = { products: productsMemory }
-    break;
-  case "dev":
     //vamos a usar FS
     console.log("FS CONNECTED");
     const { default: productsFs } = await import("./fs/product.manager.fs.js")
@@ -24,6 +18,7 @@ switch (environment) {
     dao = { products: productsFs, users: usersFs, orders: ordersFs, comments: commentsFs }
     break;
   case "prod":
+  case "dev":
     //vamos a usar MONGO
     //aca es necesario configurar la conexión de mongo
     dbConnection()
@@ -31,8 +26,8 @@ switch (environment) {
     const { default: productsMongo } = await import("./mongo/products.mongo.js")
     const { default: usersMongo } = await import("./mongo/users.mongo.js")
     const { default: ordersMongo } = await import("./mongo/orders.mongo.js")
-    const { default: commentsMongo } = await import("./mongo/comments.mongo.js")
-    dao = { products: productsMongo, users: usersMongo, orders: ordersMongo, comments: commentsMongo }
+    //const { default: commentsMongo } = await import("./mongo/comments.mongo.js")
+    dao = { products: productsMongo, users: usersMongo, orders: ordersMongo, }//comments: commentsMongo }
     break;
   default:
     break;

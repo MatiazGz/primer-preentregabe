@@ -1,8 +1,12 @@
 import service from "../services/users.service.js";
+import CustomError from "../utils/errors/CustomError.js";
+import errors from "../utils/errors/errors.js";
+
 class SessionsController {
   register = async (req, res, next) => {
-    const { email, name } = req.body
-    await this.service.register({ email, name })
+    const { email, name } = req.body;
+    const { verifiedCode } = req.user;
+    await this.service.register({ email, name, verifiedCode });
     try {
       return res.success201("Registered!");
     } catch (error) {
@@ -17,7 +21,7 @@ class SessionsController {
           maxAge: 60 * 60 * 24 * 7,
           httpOnly: true,
         })
-        .success200("Logged in!");
+        .success200("Loged in!");
     } catch (error) {
       return next(error);
     }
@@ -60,31 +64,15 @@ class SessionsController {
     }
   };
 
-  badauthcb = (req, res, next) => {
-    try {
-      return res.json({
-        statusCode: 400,
-        message: " Already done",
-      });
-    } catch (error) {
-      return next(error);
-    }
-  };
   verifyAccount = async (req, res, next) => {
     try {
-      const { email, verifiedCode } = req.body;
+      const { verifiedCode, email } = req.body;
       const user = await service.readByField(email);
       if (user.verifiedCode === verifiedCode) {
         await service.update(user._id, { verified: true });
-        return res.json({
-          statusCode: 200,
-          message: "verified user!",
-        });
-      }else {
-        res.json({
-          statusCode: 400,
-          message: "Invalid verified token"
-        })
+        return res.success200("verified user!");
+      } else {
+        CustomError.new(errors.token);
       }
     } catch (error) {
       return next(error);
@@ -94,5 +82,6 @@ class SessionsController {
 
 export default SessionsController;
 const controller = new SessionsController();
-const { register, login, github, me, signout, badauth, badauthcb, verifyAccount } = controller;
-export { register, login, github, me, signout, badauth, badauthcb, verifyAccount };
+const { register, login, github, me, signout, badauth, verifyAccount } =
+  controller;
+export { register, login, github, me, signout, badauth, verifyAccount };

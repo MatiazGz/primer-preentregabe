@@ -8,7 +8,6 @@ import { engine } from "express-handlebars";
 import cookieParser from "cookie-parser";
 import expressSession from "express-session";
 import sessionFileStore from "session-file-store";
-import socketUtils from "./src/utils/socket.utils.js"
 import MongoStore from "connect-mongo";
 import args from "./src/utils/args.util.js";
 import cors from "cors";
@@ -16,6 +15,7 @@ import dbConnection from "./src/utils/db.utils.js";
 import errorHandler from "./src/middlewares/errorHandler.mid.js";
 import pathHandler from "./src/middlewares/pathHandler.mid.js";
 import __dirname from "./utils.js";
+import compression from "express-compression";
 
 const server = express();
 
@@ -29,7 +29,6 @@ const ready = () => {
 const httpServer = createServer(server);
 const socketServer = new Server(httpServer);
 httpServer.listen(PORT, ready);
-socketServer.on("connection", socketUtils);
 
 //templates
 server.engine("handlebars", engine());
@@ -39,6 +38,11 @@ server.set("views", __dirname + "/src/views");
 const FileStore = sessionFileStore(expressSession);
 //middlewares
 server.use(cookieParser(process.env.SECRET_KEY));
+server.use(
+  compression({
+    brotli: { enabled: true, zlib: {} },
+  })
+);
 
 //MEMORY STORE
 /* server.use(

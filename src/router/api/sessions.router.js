@@ -9,7 +9,6 @@ import {
   me,
   signout,
   badauth,
-  badauthcb,
   verifyAccount,
 } from "../../controllers/sessions.controller.js";
 
@@ -18,19 +17,17 @@ export default class SessionsRouter extends CustomRouter {
     //register
     this.create("/register", ["PUBLIC"], has8char, passCallBack("register"), register );
     //login
-    this.create("/login", ["PUBLIC"], passCallBack("login"), login);
+    this.create("/login", ["USER", "ADMIN", "PREM"], passCallBack("login"), login);
     // github
     this.create("/github", ["PUBLIC"], passport.authenticate("github", { scope: ["email", "profile"] }));
     this.read("/github/callback", ["PUBLIC"], passport.authenticate("github", { session: false, failureRedirect: "/api/sessions/badauth"}), github);
     //me
-    this.create("/", ["PUBLIC"], passCallBack("jwt"), me);
+    this.create("/", ["USER", "ADMIN", "PREM"], passCallBack("jwt"), me);
     //singout
-    this.create("/signout", ["PUBLIC"], passCallBack("jwt"), signout);
+    this.create("/signout", ["USER", "ADMIN", "PREM"], passCallBack("jwt"), signout);
     //badauth
     this.read("/badauth", ["PUBLIC"], badauth);
-    //signout/cb
-    this.read("/signout/cb", ["PUBLIC"], badauthcb);
     //verify
-    this.create("/verified", verifyAccount);
+    this.create("/", ["USER", "ADMIN", "PREM"], verifyAccount);
   }
 }

@@ -1,4 +1,4 @@
-import EventDTO from "../dto/products.dto.js";
+import ProductDTO from "../dto/products.dto.js";
 import dao from "../data/index.factory.js";
 
 const { products } = dao;
@@ -7,7 +7,7 @@ class ProductRep {
     this.model = products;
   }
   create = async (data) => {
-    data = new EventDTO(data);
+    data = new ProductDTO(data);
     const response = await this.model.create(data);
     return response;
   };

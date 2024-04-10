@@ -8,9 +8,10 @@ class UsersService {
   create = async (data) => await this.repository.create(data);
   read = async ({ filter, options }) =>
     await this.repository.read({ filter, options });
+  stats = async (id) => await this.repository.stats(id);
   readOne = async (id) => await this.repository.readOne(id);
   readByField = async (email) => await this.repository.readByField(email);
-  update = async (data) => await this.repository.update(id, data);
+  update = async (id, data) => await this.repository.update(id, data);
   destroy = async (id) => await this.repository.destroy(id);
   register = async (data) => {
     try {
@@ -23,3 +24,4 @@ class UsersService {
 
 const service = new UsersService();
 export default service;
+

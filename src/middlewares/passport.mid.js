@@ -6,6 +6,7 @@ import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
 import { createHash, verifyHash } from "../utils/hash.utils.js";
 import { createToken } from "../utils/token.utils.js";
 import repository from "../repositories/user.rep.js";
+import errors from "../utils/errors/errors.js";
 
 const { GOOGLE_ID, GOOGLE_CLIENT, GITHUB_ID, GITHUB_CLIENT, SECRET } =
   process.env;
@@ -17,16 +18,12 @@ passport.use(
     async (req, email, password, done) => {
       try {
         let one = await repository.readByField(email);
-        if (!one) {
-          let data = req.body;
-          data.password = createHash(password);
-          let user = await repository.create(data);
-          return done(null, user);
+        if (one) {
+          return done(null, false, errors.register);
         } else {
-          return done(null, false, {
-            messages: "Already exists",
-            statusCode: 400,
-          });
+          const user = await repository.create(req.body);
+          console.log(user);
+          return done(null, user);
         }
       } catch (error) {
         return done(error);
@@ -41,13 +38,12 @@ passport.use(
     async (req, email, password, done) => {
       try {
         const user = await repository.readByField(email);
-        let verify = verifyHash(password, user.password);
-        if (user?.verified && verify ) {
-          const token = createToken({ email, role: user.role });
-          req.token = token;
+        const verify = verifyHash(password, user.password);
+        if (user?.verified && verify) {
+          req.token = createToken({ email, role: user.role });
           return done(null, user);
         } else {
-          return done(null, false, { messages: "Bad auth" });
+          return done(null, false, errors.auth);
         }
       } catch (error) {
         return done(error);
@@ -128,12 +124,11 @@ passport.use(
     },
     async (payload, done) => {
       try {
-        const user = await repository.readByField(payload.email);
+        const user = await repository.readOne(payload._id);
         if (user) {
-          user.password = null;
           return done(null, user);
         } else {
-          return done(null, false);
+          return done(null, false, errors.forbidden);
         }
       } catch (error) {
         return done(error);
