@@ -19,7 +19,7 @@ import compression from "express-compression";
 
 const server = express();
 
-const PORT = env.PORT || 8080;
+const PORT = env.PORT 
 const ready = () => {
   console.log("server ready on port " + PORT);
   dbConnection();

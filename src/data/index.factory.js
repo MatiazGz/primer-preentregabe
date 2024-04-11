@@ -1,5 +1,6 @@
 import argsUtil from "../utils/args.util.js";
 import dbConnection from "../utils/db.utils.js";
+import env from "../utils/env.util.js";
 
 const environment = argsUtil.env;
 //la variable puede ser el ambiente o directamente la persistencia con la que tengo que trabajar
