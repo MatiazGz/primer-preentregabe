@@ -1,4 +1,8 @@
+import users from "../data/mongo/users.mongo.js";
 import service from "../services/orders.service.js";
+import CustomError from "../utils/errors/CustomError.js";
+import errors from "../utils/errors/errors.js";
+import { verifytoken } from "../utils/token.utils.js";
 
 class  OrdersController {
   constructor() {
@@ -6,9 +10,7 @@ class  OrdersController {
   }
   create = async (req, res, next) => {
     try {
-      const data = req.body;
-      data.user_id = req.user._id;
-      const response = await this.service.create(data);
+      const response = await this.service.create(req.body);
       return res.success201(response);
     } catch (error) {
       return next(error);
@@ -17,21 +19,18 @@ class  OrdersController {
 
   read = async (req, res, next) => {
     try {
-      const oprions = {
-        limit: req.query.limit || 10,
-        page: req.query.page || 1,
-        sort: { title: 1 },
-        lean: true,
-      };
-      const filter = {};
-      if (req.user._id) {
-        filter.user_id = req.user._id;
-      }
-      if (req.query.sort === "desc") {
-        oprions.sort.title = "desc";
-      }
+      const token = req.cookies.token
+      const userData = verifytoken(token)
+      const user = await users.readByField(userData.email)
       const all = await this.service.read({ filter, oprions });
-      return res.success200(all);
+      const filter = {
+        user_id: user._id
+      }
+      if (all.docs.length> 0){
+        return res.success200(all);
+      }else{
+      CustomError.new(errors.notFound)
+      }
     } catch (error) {
       return next(error);
     }
@@ -52,7 +51,11 @@ class  OrdersController {
       const { oid } = req.params;
       const data = req.body;
       const response = await this.service.update(oid, data);
-      return res.success200(response);
+      if (response){
+        return res.success200(response);
+      }else{
+      CustomError.new(errors.notFound)
+      }
     } catch (error) {
       return next(error);
     }
@@ -62,7 +65,11 @@ class  OrdersController {
     try {
       const { oid } = req.params;
       const response = await this.service.destroy(oid);
-      return res.success200(response);
+      if (response){
+        return res.success200(response);
+      }else{
+      CustomError.new(errors.notFound)
+      }
     } catch (error) {
       return next(error);
     }

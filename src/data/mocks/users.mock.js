@@ -17,14 +17,14 @@ async function createMocks() {
   try {
     const data = usersMock();
     const user = await repository.create(data);
-    for (let i = 1; i <= 1; i++) {
+    for (let i = 1; i <= 2; i++) {
       await createProduct(user._id);
     }
   } catch (error) {
     console.log(error);
   }
 }
-for (let i = 1; i <= 10; i++) {
+for (let i = 1; i <= 100; i++) {
   createMocks()
 }
 console.log("DATA CREATED");

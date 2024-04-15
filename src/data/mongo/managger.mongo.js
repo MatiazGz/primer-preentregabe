@@ -1,8 +1,6 @@
-import notFoundOne from "../../utils/noFoundOne.utils.js";
 import Order from "./models/order.model.js";
 import Product from "./models/product.model.js";
 import User from "./models/user.model.js";
-import Category from "./models/category.model.js";
 import { Types } from "mongoose";
 
 class MongoManagger {
@@ -17,14 +15,9 @@ class MongoManagger {
       throw error;
     }
   }
-  async read({filter, options}) {
+  async read({ filter, options }) {
     try {
       const all = await this.model.paginate(filter, options);
-      if (all.totalPages === 0) {
-        const error = new Error("NOT FOUND!");
-        error.statusCode = 404;
-        throw error;
-      }
       return all;
     } catch (error) {
       throw error;
@@ -68,7 +61,6 @@ class MongoManagger {
   async readOne(id) {
     try {
       const one = await this.model.findById(id).lean();
-      notFoundOne(one);
       return one;
     } catch (error) {
       throw error;
@@ -77,7 +69,6 @@ class MongoManagger {
   async readByField(email) {
     try {
       const one = await this.model.findOne({ email });
-
       return one;
     } catch (error) {
       throw error;
@@ -88,7 +79,6 @@ class MongoManagger {
     try {
       const opt = { new: true }; // este objeto de configuracion opcional devuelve el objeto luego de la modificacion
       const one = await this.model.findByIdAndUpdate(id, data, opt);
-      notFoundOne(one);
       return one;
     } catch (error) {
       throw error;
@@ -97,7 +87,6 @@ class MongoManagger {
   async destroy(id) {
     try {
       const one = await this.model.findByIdAndDelete(id);
-      notFoundOne(one);
       return one;
     } catch (error) {
       throw error;
@@ -120,9 +109,6 @@ class MongoManagger {
 const products = new MongoManagger(Product);
 const users = new MongoManagger(User);
 const orders = new MongoManagger(Order);
-//const comments = new MongoManagger(Comment);
-//const clothes = new MongoManagger(Clothe);
-const categories = new MongoManagger(Category)
 
-  export { products, users, orders, categories,} //clothes, comments };
+export { products, users, orders };
 export default MongoManagger;

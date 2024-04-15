@@ -12,7 +12,7 @@ selector.addEventListener("click", async () => {
     };
     let response = await fetch("/api/sessions/login", opts);
     response = await response.json();
-    alert(response.message);
+    alert("Logged in");
     if (response.statusCode === 200) {
       location.replace("/");
     }

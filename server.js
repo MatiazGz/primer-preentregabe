@@ -8,8 +8,6 @@ import { engine } from "express-handlebars";
 import cookieParser from "cookie-parser";
 import expressSession from "express-session";
 import sessionFileStore from "session-file-store";
-import MongoStore from "connect-mongo";
-import args from "./src/utils/args.util.js";
 import cors from "cors";
 import dbConnection from "./src/utils/db.utils.js";
 import errorHandler from "./src/middlewares/errorHandler.mid.js";

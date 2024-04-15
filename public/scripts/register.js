@@ -19,9 +19,10 @@ selector.addEventListener("click", async () => {
     };
     let response = await fetch("/api/sessions/register", opts);
     response = await response.json();
-    response.statusCode === 201
-      ? location.replace("/sessions/login")
-      : alert("ERROR: " + response.message);
+    alert(response.message)
+    if (response.statusCode === 201){
+      location.replace("/sessions/login")
+    }
   } catch (error) {
     alert(error.message);
   }

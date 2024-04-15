@@ -7,6 +7,8 @@ import { createHash, verifyHash } from "../utils/hash.utils.js";
 import { createToken } from "../utils/token.utils.js";
 import repository from "../repositories/user.rep.js";
 import errors from "../utils/errors/errors.js";
+import crypto from "crypto"
+import users from "../data/mongo/users.mongo.js";
 
 const { GOOGLE_ID, GOOGLE_CLIENT, GITHUB_ID, GITHUB_CLIENT, SECRET } =
   process.env;
@@ -17,13 +19,15 @@ passport.use(
     { passReqToCallback: true, usernameField: "email" },
     async (req, email, password, done) => {
       try {
-        let one = await repository.readByField(email);
-        if (one) {
-          return done(null, false, errors.register);
-        } else {
-          const user = await repository.create(req.body);
-          console.log(user);
+        const one = await repository.readByField(email);
+        if (!one) {
+          let data = req.body;
+          const verifiedCode = crypto.randomBytes(12).toString("hex")
+          data.verifiedCode = verifiedCode
+          let user = await repository.create(data);
           return done(null, user);
+        } else {
+          return done(null, false, errors.register);
         }
       } catch (error) {
         return done(error);
@@ -124,11 +128,11 @@ passport.use(
     },
     async (payload, done) => {
       try {
-        const user = await repository.readOne(payload._id);
+        const user = await users.readByField(payload.email);
         if (user) {
           return done(null, user);
         } else {
-          return done(null, false, errors.forbidden);
+          return done(null, false);
         }
       } catch (error) {
         return done(error);

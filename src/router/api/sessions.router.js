@@ -17,7 +17,7 @@ export default class SessionsRouter extends CustomRouter {
     //register
     this.create("/register", ["PUBLIC"], has8char, passCallBack("register"), register );
     //login
-    this.create("/login", ["USER", "ADMIN", "PREM"], passCallBack("login"), login);
+    this.create("/login", ["PUBLIC"], passCallBack("login"), login);
     // github
     this.create("/github", ["PUBLIC"], passport.authenticate("github", { scope: ["email", "profile"] }));
     this.read("/github/callback", ["PUBLIC"], passport.authenticate("github", { session: false, failureRedirect: "/api/sessions/badauth"}), github);

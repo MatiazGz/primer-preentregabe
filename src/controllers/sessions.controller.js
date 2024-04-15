@@ -3,6 +3,9 @@ import CustomError from "../utils/errors/CustomError.js";
 import errors from "../utils/errors/errors.js";
 
 class SessionsController {
+  constructor() {
+    this.service = service;
+  }
   register = async (req, res, next) => {
     const { email, name } = req.body;
     const { verifiedCode } = req.user;

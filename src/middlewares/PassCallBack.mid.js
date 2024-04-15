@@ -1,4 +1,6 @@
 import passport from "passport";
+import CustomError from "../utils/errors/CustomError.js";
+import errors from "../utils/errors/errors.js";
 
 export default (strategy) => {
   return async (req, res, next) => {
@@ -8,10 +10,11 @@ export default (strategy) => {
         return next(error);
       }
       if (!user) {
-        return res.json({
-          statusCode: info.statusCode || 401,
-          message: info.messages || info.toString(),
-        });
+        CustomError.new(errors.callbackPass(info.message || info.toString(), info.statusCode || 401))
+        // return res.json({
+        //   statusCode: info.statusCode || 401,
+        //   message: info.messages || info.toString(),
+        // });
       }
       req.user = user;
       return next();

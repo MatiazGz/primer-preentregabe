@@ -1,4 +1,6 @@
 import service from "../services/users.service.js";
+import CustomError from "../utils/errors/CustomError.js";
+import errors from "../utils/errors/errors.js";
 
 class UsersController {
     constructor (){
@@ -26,11 +28,12 @@ class UsersController {
           if (req.query.email) {
             filter.email = new RegExp(req.query.email.trim(), "i");
           }
-          if (req.query.sort === "desc") {
-            options.sort.email = "desc";
-          }
           const all = await this.service.read({ filter, options });
-          return res.success200(all);
+          if (all.docs.length> 0){
+            return res.success200(all);
+          }else{
+          CustomError.new(errors.notFound)
+          }
         } catch (error) {
           return next(error);
         }
@@ -40,7 +43,11 @@ class UsersController {
         try {
           const { uid } = req.params;
           const one = await this.service.readOne(uid);
-          return res.success200(one);
+          if (one){
+            return res.success200(one);
+          }else{
+          CustomError.new(errors.notFound)
+          }
         } catch (error) {
           return next(error);
         }
@@ -50,7 +57,11 @@ class UsersController {
         try {
           const { uem } = req.params;
           const one = await this.service.readByField(uem);
-          return res.success200(one);
+          if (one){
+            return res.success200(one);
+          }else{
+          CustomError.new(errors.notFound)
+          }
         } catch (error) {
           return next(error);
         }
@@ -61,7 +72,11 @@ class UsersController {
           const { uid } = req.params;
           const data = req.body;
           const response = await this.service.update(uid, data);
-          return res.success200(response);
+          if (response){
+            return res.success200(response);
+          }else{
+          CustomError.new(errors.notFound)
+          }
         } catch (error) {
           return next(error);
         }
@@ -71,7 +86,11 @@ class UsersController {
         try {
           const { uid } = req.params;
           const response = await this.service.destroy(uid);
-          return res.success200(response);
+          if (response){
+            return res.success200(response);
+          }else{
+          CustomError.new(errors.notFound)
+          }
         } catch (error) {
           return next(error);
         }

@@ -4,8 +4,8 @@ import { createHash } from "../utils/hash.utils.js";
 
 class UserDTO {
   constructor(data) {
-    argsUtil.env !== "prod" &&
-      (this._id = crypto.randomBytes(12).toString("hex"));
+    argsUtil.env === "test" && (this._id = crypto.randomBytes(12).toString("hex"));
+    this._id = crypto.randomBytes(12).toString("hex"),
     this.name = data.name;
     this.email = data.email;
     this.password = createHash(data.password);
@@ -14,9 +14,9 @@ class UserDTO {
     this.age = data.age || 18;
     this.role = data.role || 0;
     this.verified = data.verified || false;
-    this.verifiedCode = crypto.randomBytes(12).toString("base64")
-    argsUtil.env !== "prod" && (this.updatedAt = new Date());
-    argsUtil.env !== "prod" && (this.createdAt = new Date());
+    this.verifiedCode = crypto.randomBytes(12).toString("base64");
+    argsUtil.env === "test" && (this.updatedAt = new Date()),
+    argsUtil.env === "test" && (this.createdAt = new Date())
   }
 }
 

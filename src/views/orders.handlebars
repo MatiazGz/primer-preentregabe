@@ -1,25 +1,10 @@
 <main class="flex-grow-1 w-100 d-flex flex-column">
   <h2 class="subtitle mt-4 mb-2 text-center">Mi Carrito</h2>
-  {{#if message}}
-    message
-  {{else}}
     <section
       id="items"
       class="d-flex flex-column justify-content-center align-items-center m-auto mt-2 mb-4 bg-light"
       style="width: 360px;"
     >
-      <article class="w-100 d-flex border border-dark">
-        <p style="width: 100px;" class="m-0 p-2 fw-bold"></p>
-        <p
-          style="width: 100px;"
-          class="d-flex justify-content-start align-items-center m-0 p-2 fw-bold"
-        >Titulo</p>
-        <p
-          style="width: 100px;"
-          class="d-flex justify-content-end align-items-center m-0 p-2 fw-bold"
-        >Precio</p>
-        <p style="width: 60px;" class="m-0 p-2 fw-bold"></p>
-      </article>
       {{#each orders}}
         <article class="w-100 d-flex border border-danger">
           <img
@@ -52,3 +37,6 @@
         </article>
       {{/each}}
     </section>
+  
+</main>
+<script src="/scripts/orders.js"></script>
