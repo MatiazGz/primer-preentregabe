@@ -28,6 +28,6 @@ export default class SessionsRouter extends CustomRouter {
     //badauth
     this.read("/badauth", ["PUBLIC"], badauth);
     //verify
-    this.create("/", ["USER", "ADMIN", "PREM"], verifyAccount);
+    this.create("/verify", ["USER", "ADMIN", "PREM"], verifyAccount);
   }
 }
