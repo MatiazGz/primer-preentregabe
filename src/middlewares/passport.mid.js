@@ -7,7 +7,7 @@ import { createHash, verifyHash } from "../utils/hash.utils.js";
 import { createToken } from "../utils/token.utils.js";
 import repository from "../repositories/user.rep.js";
 import errors from "../utils/errors/errors.js";
-import crypto from "crypto"
+import crypto from "crypto";
 import users from "../data/mongo/users.mongo.js";
 
 const { GOOGLE_ID, GOOGLE_CLIENT, GITHUB_ID, GITHUB_CLIENT, SECRET } =
@@ -22,8 +22,8 @@ passport.use(
         const one = await repository.readByField(email);
         if (!one) {
           let data = req.body;
-          const verifiedCode = crypto.randomBytes(12).toString("hex")
-          data.verifiedCode = verifiedCode
+          const verifiedCode = crypto.randomBytes(12).toString("hex");
+          data.verifiedCode = verifiedCode;
           let user = await repository.create(data);
           return done(null, user);
         } else {
@@ -133,6 +133,24 @@ passport.use(
           return done(null, user);
         } else {
           return done(null, false);
+        }
+      } catch (error) {
+        return done(error);
+      }
+    }
+  )
+);
+passport.use(
+  new LocalStrategy(
+    { passReqToCallback: true, usernameField: "email", passwordField: "code" },
+    async (req, email, code, done) => {
+      try {
+        const user = await repository.readByField(email);
+        if (user && user.verifiedCode === code) {
+          await repository.update(user._id, { verified: true });
+          return done(null, user);
+        } else {
+          return done(null, false, { message: "Incorrect verification code" });
         }
       } catch (error) {
         return done(error);
