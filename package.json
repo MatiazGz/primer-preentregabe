@@ -8,12 +8,15 @@
     "dev": "nodemon ./server.js --env dev",
     "test": "nodemon ./server.js --env test",
     "simplex": "artillery quick --count 40 --num 50 'http://localhost:8080/simplex' -o ./test/quick/simplex.json",
-    "complex": "artillery quick --count 40 --num 50 'http://localhost:8080/complex' -o ./test/quick/complex.json"
+    "complex": "artillery quick --count 40 --num 50 'http://localhost:8080/complex' -o ./test/quick/complex.json",
+    "performance": "artillery run ./test/flow/flow.yaml --output ./test/flow/flow.json",
+    "report": "artillery report ./test/flow/flow.html"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "artillery-plugin-metrics-by-endpoint": "^1.4.0",
     "bcrypt": "^5.1.1",
     "bootstrap": "^5.3.2",
     "command": "^0.0.1",
