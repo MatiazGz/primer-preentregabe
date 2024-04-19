@@ -22,7 +22,7 @@ github.addEventListener("click", async () => {
     };
     let response = await fetch("/api/sessions/github", opts);
     response = await response.json();
-    console.log(response);
+    //console.log(response);
   } catch (error) {
     alert(error.message);
   }

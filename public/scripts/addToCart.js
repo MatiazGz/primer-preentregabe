@@ -9,7 +9,7 @@ selector.addEventListener("click", async (product) => {
     };
     let response = await fetch("/api/orders", opts);
     response = await response.json();
-    console.log(response);
+    //console.log(response);
     if (response.statusCode === 401) alert("PLEASE LOG IN!");
     else location.replace("/orders");
   } catch (error) {

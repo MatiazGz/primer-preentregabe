@@ -14,12 +14,14 @@ import errorHandler from "./src/middlewares/errorHandler.mid.js";
 import pathHandler from "./src/middlewares/pathHandler.mid.js";
 import __dirname from "./utils.js";
 import compression from "express-compression";
+import winston from "./src/middlewares/winston.mid.js";
+import winstonUtil from "./src/utils/winston.util.js";
 
 const server = express();
 
 const PORT = env.PORT 
 const ready = () => {
-  console.log("server ready on port " + PORT);
+  winstonUtil.INFO(JSON.stringify("server ready on port " + PORT));
   dbConnection();
 };
 //server.listen(PORT, ready);
@@ -35,6 +37,7 @@ server.set("views", __dirname + "/src/views");
 
 const FileStore = sessionFileStore(expressSession);
 //middlewares
+server.use(winston)
 server.use(cookieParser(process.env.SECRET_KEY));
 server.use(
   compression({

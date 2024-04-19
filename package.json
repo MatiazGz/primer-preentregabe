@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node ./server.js",
     "dev": "nodemon ./server.js --env dev",
-    "test": "nodemon ./server.js --env test"
+    "test": "nodemon ./server.js --env test",
+    "simplex": "artillery quick --count 40 --num 50 'http://localhost:8080/simplex' -o ./test/quick/simplex.json",
+    "complex": "artillery quick --count 40 --num 50 'http://localhost:8080/complex' -o ./test/quick/complex.json"
   },
   "keywords": [],
   "author": "",
@@ -38,11 +40,13 @@
     "passport-local": "^1.0.0",
     "session-file-store": "^1.5.0",
     "socket.io": "^4.7.4",
-    "twilio": "^5.0.2"
+    "twilio": "^5.0.2",
+    "winston": "^3.13.0"
   },
   "description": "",
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
+    "artillery": "^2.0.10",
     "nodemon": "^3.0.3"
   }
 }

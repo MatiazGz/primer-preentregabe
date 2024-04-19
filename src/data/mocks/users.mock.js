@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 import repository from "../../repositories/user.rep.js";
 import createProduct from "./products.mock.js";
+import winston from "../../utils/winston.util.js";
 
 function usersMock() {
   return {
@@ -21,10 +22,10 @@ async function createMocks() {
       await createProduct(user._id);
     }
   } catch (error) {
-    console.log(error);
+    winston.WARN(error.message);
   }
 }
 for (let i = 1; i <= 100; i++) {
-  createMocks()
+  createMocks();
 }
-console.log("DATA CREATED");
+winston.INFO("DATA CREATED");

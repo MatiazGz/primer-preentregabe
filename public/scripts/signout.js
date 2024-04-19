@@ -1,3 +1,4 @@
+import winston from "../../src/utils/winston.util.js";
 fetch("/api/sessions/", { method: "POST" })
   .then((res) => res.json())
   .then((res) => {
@@ -19,7 +20,7 @@ fetch("/api/sessions/", { method: "POST" })
             location.replace("/");
           }
         } catch (error) {
-          console.log(error);
+          winston.WARN(error.message);
         }
       });
     } else {

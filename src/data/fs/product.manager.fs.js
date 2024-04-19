@@ -35,14 +35,14 @@ class ProductManager {
       throw error;
     }
   }
-  read({filter, options}) {
+  read({ filter, options }) {
     try {
       if (this.products.length === 0) {
         const error = new Error("NOT FOUND!");
         error.statusCode = 404;
         throw error;
       } else {
-        console.log(this.products);
+        //console.log(this.products);
         return this.products;
       }
     } catch (error) {
@@ -65,8 +65,8 @@ class ProductManager {
   }
   async destroy(id) {
     try {
-      const one = this.readOne(id)
-      notFoundOne(one)
+      const one = this.readOne(id);
+      notFoundOne(one);
       this.products = this.products.filter((each) => each._id !== id);
       const jsonData = JSON.stringify(this.products, null, 2);
       await fs.promises.writeFile(this.path, jsonData);
@@ -86,7 +86,7 @@ class ProductManager {
             one.price * quantity * ProductManager.#perGain;
           const jsonData = JSON.stringify(this.products, null, 2);
           await fs.promises.writeFile(this.path, jsonData);
-          console.log("cantidad disponible " + one.stock);
+          winston.INFO(JSON.stringify("cantidad disponible " + one.stock));
           return one.stock;
         } else {
           const error = new Error("no queda disponibilidad de ese producto");
@@ -100,10 +100,10 @@ class ProductManager {
   }
   async update(pid, data) {
     try {
-      const one = this.products.readOne(pid); 
-      notFoundOne(one)
+      const one = this.products.readOne(pid);
+      notFoundOne(one);
       for (let each in data) {
-        one[each] = data[each]
+        one[each] = data[each];
       }
       const jsonData = JSON.stringify(this.products, null, 2);
       await fs.promises.writeFile(this.path, jsonData);
@@ -115,4 +115,3 @@ class ProductManager {
 }
 const products = new ProductManager("./src/data/fs/files/products.json");
 export default products;
-
