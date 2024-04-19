@@ -1,5 +1,5 @@
-import winston from "./winston.util";
+import logger from "./logger/index.js";
 process.on("exit", (code) => {
-  winston.INFO(JSON.stringify("el proceso terminó con código:" + code));
+  logger.INFO(JSON.stringify("el proceso terminó con código:" + code));
 });
 process.exit(1);

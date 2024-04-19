@@ -1,12 +1,12 @@
 import passport from "passport";
 import CustomError from "../utils/errors/CustomError.js";
 import errors from "../utils/errors/errors.js";
-import winston from "../utils/winston.util.js";
+import logger from "../utils/logger/index.js";;
 
 export default (strategy) => {
   return async (req, res, next) => {
     passport.authenticate(strategy, (error, user, info) => {
-      winston.INFO(JSON.stringify({ error, user, info }));
+      logger.INFO(JSON.stringify({ error, user, info }));
       if (error) {
         return next(error);
       }

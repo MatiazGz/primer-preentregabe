@@ -1,7 +1,7 @@
 import argsUtil from "../utils/args.util.js";
 import dbConnection from "../utils/db.utils.js";
 import env from "../utils/env.util.js";
-import winston from "../utils/winston.util.js";
+import logger from "../utils/logger/index.js";
 
 const environment = argsUtil.env;
 //la variable puede ser el ambiente o directamente la persistencia con la que tengo que trabajar
@@ -12,7 +12,7 @@ let dao = {};
 switch (environment) {
   case "test":
     //vamos a usar FS
-    winston.INFO("FS CONNECTED");
+    logger.INFO("FS CONNECTED");
     const { default: productsFs } = await import("./fs/product.manager.fs.js");
     const { default: usersFs } = await import("./fs/users.fs.js");
     const { default: ordersFs } = await import("./fs/orders.manager.fs.js");
@@ -28,7 +28,7 @@ switch (environment) {
   case "dev":
     //vamos a usar MONGO
     //aca es necesario configurar la conexión de mongo
-    dbConnection().then(() => winston.INFO("MONGO CONNECTED"));
+    dbConnection().then(() => logger.INFO("MONGO CONNECTED"));
     const { default: productsMongo } = await import(
       "./mongo/products.mongo.js"
     );

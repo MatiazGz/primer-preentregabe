@@ -4,7 +4,7 @@ import orders from "../../data/mongo/orders.mongo.js";
 
 import passCallBack from "../../middlewares/PassCallBack.mid.js";
 
-import winston from "../../utils/winston.util.js";
+import logger from "../../utils/logger/index.js";;
 
 const productsRouter = Router();
 
@@ -21,7 +21,7 @@ productsRouter.get("/", passCallBack("jwt"), async (req, res, next) => {
       user_id: user._id,
     };
     const all = await orders.read({ filter, options });
-    winston.INFO(JSON.stringify(all.docs[0].product_id));
+    logger.INFO(JSON.stringify(all.docs[0].product_id));
     return res.render("orders", { title: "MI CARRITO", orders: all.docs });
   } catch (error) {
     return res.render("orders", {

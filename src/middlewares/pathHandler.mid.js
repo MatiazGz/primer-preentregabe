@@ -1,7 +1,7 @@
-import winston from "../utils/winston.util.js";
+import logger from "../utils/logger/index.js";
 
 const pathHandler = (req, res, next) => {
-  winston.WARN(`${req.method} ${req.url} not found path`);
+  logger.WARN(`${req.method} ${req.url} not found path`);
   return res.json({
     status: 404,
     url: `${req.method} ${req.url}`,

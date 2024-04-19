@@ -1,4 +1,4 @@
-import winston from "../../utils/winston.util.js";
+import logger from "../../utils/logger/index.js";
 const fs = require("fs");
 
 const ruta = "./data/events.json";
@@ -22,5 +22,5 @@ const datos = JSON.stringify([
 ]);
 fs.promises
   .writeFile(ruta, datos)
-  .then((resultado) => winston.INFO(JSON.stringify(resultado)))
-  .catch((error) => winston.WARN(error.message));
+  .then((resultado) => logger.INFO(JSON.stringify(resultado)))
+  .catch((error) => logger.WARN(error.message));

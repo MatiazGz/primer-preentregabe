@@ -1,8 +1,8 @@
-import winston from "../../src/utils/winston.util.js";
+import logger from "../../src/utils/logger/index.js";
 const selectors = document.querySelectorAll(".deleteButton");
 selectors.forEach((each) =>
   each.addEventListener("click", async (product) => {
-    winston.INFO(JSON.stringify(product.target));
+    logger.INFO(JSON.stringify(product.target));
     try {
       const url = "/api/orders/" + product.target.id;
       const opts = {

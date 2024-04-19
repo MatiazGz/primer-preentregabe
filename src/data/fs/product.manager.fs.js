@@ -1,5 +1,6 @@
 import fs from "fs";
 import notFoundOne from "../../utils/noFoundOne.utils.js";
+import logger from "../../utils/logger/index.js";
 
 class ProductManager {
   static #perGain = 0.3;
@@ -86,7 +87,7 @@ class ProductManager {
             one.price * quantity * ProductManager.#perGain;
           const jsonData = JSON.stringify(this.products, null, 2);
           await fs.promises.writeFile(this.path, jsonData);
-          winston.INFO(JSON.stringify("cantidad disponible " + one.stock));
+          logger.INFO(JSON.stringify("cantidad disponible " + one.stock));
           return one.stock;
         } else {
           const error = new Error("no queda disponibilidad de ese producto");
