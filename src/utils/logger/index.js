@@ -1,5 +1,3 @@
-import dbConnection from "../db.utils";
-
 const persistence = process.env.MODE || "PROD";
 
 let logger;
@@ -12,7 +10,6 @@ switch (persistence) {
   logger = winstonDev;
     break;
   default:
-    dbConnection();
     const { default: winstonProd } = await import("./winston.util.js");
     logger = winstonProd;
     break;
