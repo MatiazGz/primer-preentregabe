@@ -12,7 +12,7 @@ scenarios:
       - post:
           url: /sessions/login
           json:
-            email: mati@coder.com
+            email: flo@coder.com
             password: mati1234
       - log: create
       - post:
