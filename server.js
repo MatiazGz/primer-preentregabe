@@ -14,6 +14,8 @@ import errorHandler from "./src/middlewares/errorHandler.mid.js";
 import pathHandler from "./src/middlewares/pathHandler.mid.js";
 import __dirname from "./utils.js";
 import compression from "express-compression";
+import cluster from "cluster";
+import { cpus } from "os";
 import winston from "./src/middlewares/winston.mid.js";
 import logger from "./src/utils/logger/index.js";
 
@@ -28,7 +30,6 @@ const ready = () => {
 
 const httpServer = createServer(server);
 const socketServer = new Server(httpServer);
-httpServer.listen(PORT, ready);
 
 //templates
 server.engine("handlebars", engine());
@@ -98,4 +99,14 @@ server.use(errorHandler);
 server.use(pathHandler);
 //socket
 
+//clusters
+if (cluster.isPrimary) {
+  const numberOfProcess = cpus().length;
+  for (let i = 1; i <= numberOfProcess; i++) {
+    cluster.fork();
+  }
+} else {
+  console.log(process.pid);
+  httpServer.listen(PORT, ready);
+}
 export { socketServer };
