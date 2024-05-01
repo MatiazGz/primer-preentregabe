@@ -5,6 +5,12 @@ const collection = "products";
 const schema = new Schema(
   {
     title: { type: String, required: true, index: true },
+    owner_id: {
+      type: Types.ObjectId,
+      required: true,
+      ref: "users",
+      index: true,
+    },
     photo: {
       type: String,
       default:

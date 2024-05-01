@@ -1,6 +1,5 @@
 import argsUtil from "../utils/args.util.js";
 import dbConnection from "../utils/db.utils.js";
-import env from "../utils/env.util.js";
 import logger from "../utils/logger/index.js";
 
 const environment = argsUtil.env;

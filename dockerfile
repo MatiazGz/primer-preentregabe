@@ -3,7 +3,7 @@
 
  #definir donde se va a guardar el proyecto/imagen
 
-WORKDIR /simplex-complex
+WORKDIR /simplexcomplex
 
 #muevo el package de la aplicación desde el servidor hacia el contenedor 
 COPY package*.json ./

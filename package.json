@@ -11,8 +11,9 @@
     "complex": "artillery quick --count 40 --num 50 'http://localhost:8080/complex' -o ./test/quick/complex.json",
     "performance": "artillery run ./test/flow/flow.yaml --output ./test/flow/flow.json",
     "report": "artillery report ./test/flow/flow.html",
-    "image": "docker build -t simplex-complex .",
-    "container": "docker run -p 8080:8080 simplex-complex"
+    "image": "docker build -t simplexcomplex .",
+    "container": "docker run -p 8080:8080 simplexcomplex",
+    "orquestra": "kubectl apply -f ./orquestra.yaml"
   },
   "keywords": [],
   "author": "",
