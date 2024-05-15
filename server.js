@@ -18,6 +18,9 @@ import cluster from "cluster";
 import { cpus } from "os";
 import winston from "./src/middlewares/winston.mid.js";
 import logger from "./src/utils/logger/index.js";
+import options from "./src/utils/swagger.js";
+import swaggerJSDoc from "swagger-jsdoc";
+import { serve, setup } from "swagger-ui-express";
 
 const server = express();
 
@@ -45,6 +48,9 @@ server.use(
     brotli: { enabled: true, zlib: {} },
   })
 );
+
+const specs = swaggerJSDoc(options);
+server.use("/api/docs", serve, setup(specs));
 
 //MEMORY STORE
 /* server.use(
@@ -82,6 +88,8 @@ server.use(
 //     }),
 //   })
 // );
+
+
 server.use(
   cors({
     origin: true,
