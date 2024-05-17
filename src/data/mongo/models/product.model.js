@@ -1,16 +1,10 @@
-import { model, Schema, Types } from "mongoose";
+import { model, Schema } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 
 const collection = "products";
 const schema = new Schema(
   {
     title: { type: String, required: true, index: true },
-    owner_id: {
-      type: Types.ObjectId,
-      required: true,
-      ref: "users",
-      index: true,
-    },
     photo: {
       type: String,
       default:
