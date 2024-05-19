@@ -10,10 +10,13 @@ describe("Testing: Products Model", () => {
     it("La creación del producto requiere un objeto con la propiedad title", () => {
         expect(data).to.have.property("title");
     });
+    it("La creación de un producto no necesita un objeto con la propiedad 'photo'", () => {
+        expect(data).not.to.have.property("photo");
+    });
     it("La creación del producto requiere un objeto con la propiedad category", () => {
         expect(data).to.have.property("category");
     });
-    it("La función creadora de un producto, devuelve un objeto con la propiedad '_id'", async () => {
+    it("La función creadora de un producto, devuelve un objeto", async () => {
         const one = await model.create(data);
         expect(one).to.be.an("object");
     });
@@ -26,6 +29,7 @@ describe("Testing: Products Model", () => {
         const all = await model.read({
             page: 1,
             limit: 5,
+            category: "test"
         });
         expect(all).to.have.property("prev");
         expect(all).to.have.property("next");
@@ -33,7 +37,7 @@ describe("Testing: Products Model", () => {
     });
     it("La función para actualizar un producto debe devolver un objeto con el producto actualizado", async () => {
         const before = await model.readOne(id);
-        const one = await model.update(id, { title: "TestProducto" });
+        const one = await model.update(id, { title: "Producto" });
         expect(one.title).not.to.be.equals(before.title);
     });
     it("La función para eliminar un producto debe efectivamente eliminarlo", async () => {
