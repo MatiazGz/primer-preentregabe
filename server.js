@@ -114,7 +114,7 @@ if (cluster.isPrimary) {
     cluster.fork();
   }
 } else {
-  console.log(process.pid);
+  logger.INFO(process.pid);
   httpServer.listen(PORT, ready);
 }
 export { socketServer };
