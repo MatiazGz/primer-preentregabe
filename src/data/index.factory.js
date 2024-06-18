@@ -28,9 +28,7 @@ switch (environment) {
     //vamos a usar MONGO
     //aca es necesario configurar la conexión de mongo
     dbConnection().then(() => logger.INFO("MONGO CONNECTED"));
-    const { default: productsMongo } = await import(
-      "./mongo/products.mongo.js"
-    );
+    const { default: productsMongo } = await import("./mongo/products.mongo.js");
     const { default: usersMongo } = await import("./mongo/users.mongo.js");
     const { default: ordersMongo } = await import("./mongo/orders.mongo.js");
     //const { default: commentsMongo } = await import("./mongo/comments.mongo.js")

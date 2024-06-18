@@ -1,8 +1,8 @@
-import logger from "../../src/utils/logger/index.js";
+//import logger from "../../src/utils/logger/index.js";
 const selectors = document.querySelectorAll(".deleteButton");
 selectors.forEach((each) =>
   each.addEventListener("click", async (product) => {
-    logger.INFO(JSON.stringify(product.target));
+    console.log(JSON.stringify(product.target));
     try {
       const url = "/api/orders/" + product.target.id;
       const opts = {
@@ -12,12 +12,22 @@ selectors.forEach((each) =>
       let response = await fetch(url, opts);
       response = await response.json();
       //console.log(response);
-      if(response.statusCode===200) {
+      if (response.statusCode === 200) {
         alert(response.message);
-        location.reload()
+        location.reload();
       }
     } catch (error) {
       alert(error.message);
     }
   })
 );
+const opts = {
+  method: "POST",
+  headers: {
+    "Content-Type": "aplication/json",
+  },
+};
+document.querySelector("#checkout_btn").onclick = () =>
+  fetch("/api/payments/checkout", opts)
+    .then((res) => res.json())
+    .then((res) => location.replace(res.url));

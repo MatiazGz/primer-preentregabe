@@ -14,7 +14,7 @@ export default (strategy) => {
         CustomError.new(
           errors.callbackPass(
             info.message || info.toString(),
-            info.statusCode || 401
+            info.statusCode || 401   
           )
         );
         // return res.json({

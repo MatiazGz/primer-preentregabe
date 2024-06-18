@@ -1,4 +1,3 @@
-import logger from "../../src/utils/logger/index.js";
 fetch("/api/sessions/", { method: "POST" })
   .then((res) => res.json())
   .then((res) => {
@@ -19,12 +18,12 @@ fetch("/api/sessions/", { method: "POST" })
           let response = await fetch("/api/sessions/signout", opts);
           response = await response.json();
           if (response.statusCode === 200) {
-            alert(response.message);
+            alert("Singed out!");
             localStorage.removeItem("token");
             location.replace("/");
           }
         } catch (error) {
-          logger.WARN(error.message);
+          alert(error.message);
         }
       });
     } else {

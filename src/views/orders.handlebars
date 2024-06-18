@@ -6,7 +6,7 @@
       style="width: 360px;"
     >
       {{#each orders}}
-        <article class="w-100 d-flex border border-danger">
+        <article class="w-100 d-flex border border-dark">
           <img
             src={{this.product_id.photo}}
             style="width: 100px; heigth: 100px"
@@ -36,6 +36,11 @@
           </span>
         </article>
       {{/each}}
+    </section>
+    <section>
+      <button id="checkout_btn"
+        type="button"
+        class="w-100 btn btn-dark mt-3">Comprar</button>
     </section>
   
 </main>

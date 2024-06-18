@@ -3,7 +3,7 @@ import { expect } from "chai";
 import supertest from "supertest";
 import dao from "../../src/data/index.factory.js";
 
-const { products } = dao;
+const { users } = dao;
 const requester = supertest("http://localhost:" + process.env.PORT + "/api");
 
 describe("Testeando API", () => {
