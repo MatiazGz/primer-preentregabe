@@ -1,58 +1,81 @@
-class UserManager {
+import crypto from "crypto";
+
+class UsersManager {
   static #users = [];
   constructor() {}
-  createUser({ name, photo, email, ...data }) {
+  async create(data) {
     try {
-      if (!name || !photo || !email) {
-        throw new Error("ingrese todos los datos");
+      if (!data.name || !data.email) {
+        const error = new Error("name & email are required");
+        error.statusCode = 400;
+        throw error;
       }
       const user = {
-        id:
-          UserManager.#users.length === 0
-            ? 1
-            : UserManager.#users[UserManager.#users.length - 1].id + 1,
-        name,
-        photo,
-        email,
+        id: crypto.randomBytes(12).toString("hex"),
+        name: data.name,
+        email: data.email,
+        photo: data.photo || "https://i.postimg.cc/wTgNFWhR/profile.png",
       };
-      UserManager.#users.push(user);
-      return user;
+      UsersManager.#users.push(user);
+      return user.id;
     } catch (error) {
-      return error.message;
+      throw error;
     }
   }
   read() {
     try {
-      const allUsers = UserManager.#users;
-      if (allUsers.length === 0) {
-        throw new Error("No hay ningun usuario");
+      if (UsersManager.#users.length === 0) {
+        const error = new Error("NOT FOUND!");
+        error.statusCode = 404;
+        throw error;
       } else {
-        return allUsers;
+        return UsersManager.#users;
       }
     } catch (error) {
-      return error.message;
+      throw error;
     }
   }
   readOne(id) {
-    return UserManager.#users.find((each) => each.id === Number(id));
+    try {
+      const one = UsersManager.#users.find((each) => each.id === id);
+      if (!one) {
+        const error = new Error("NOT FOUND!");
+        error.statusCode = 404;
+        throw error;
+      } else {
+        return one;
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+  async update(uid, data) {
+    try {
+      const one = UsersManager.#users.readOne(uid);
+      if (one) {
+        for (let each in data) {
+          one[each] = data[each];
+        }
+      }
+      return one;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async destroy(id) {
+    try {
+      const one = this.readOne(id);
+      if (one) {
+        UsersManager.#users = UsersManager.#users.filter(
+          (each) => each.id !== id
+        );
+      }
+      return one;
+    } catch (error) {
+      throw error;
+    }
   }
 }
 
-const products = new UserManager();
-
-console.log(
-  products.createUser({
-    name: "Ronaldo",
-    photo: "https://cdn.conmebol.com/wp-content/uploads/2018/05/r92.jpg",
-    email: "ronaldonazario@outlook.com",
-  })
-);
-
-console.log(
-  products.createUser({
-    name: "Raul",
-    photo:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Raul_Gonzalez_10mar2007.jpg/640px-Raul_Gonzalez_10mar2007.jpg",
-    email: "raulgonzalez@outlook.com",
-  })
-);
+const users = new UsersManager();
+export default { users };

@@ -1,8 +1,6 @@
-import notFoundOne from "../../utils/noFoundOne.utils.js";
 import Order from "./models/order.model.js";
 import Product from "./models/product.model.js";
 import User from "./models/user.model.js";
-import Event from "./models/events.models.js";
 import { Types } from "mongoose";
 
 class MongoManagger {
@@ -12,19 +10,14 @@ class MongoManagger {
   async create(data) {
     try {
       const one = await this.model.create(data);
-      return one._id;
+      return one;
     } catch (error) {
       throw error;
     }
   }
-  async read(filter, orderAndPaginate) {
+  async read({ filter, options }) {
     try {
-      const all = await this.model.paginate(filter, orderAndPaginate);
-      if (all.totalPages === 0) {
-        const error = new Error("There aren't any document");
-        error.statusCode = 404;
-        throw error;
-      }
+      const all = await this.model.paginate(filter, options);
       return all;
     } catch (error) {
       throw error;
@@ -67,24 +60,15 @@ class MongoManagger {
   }
   async readOne(id) {
     try {
-      const one = await this.model.findById(id);
-      notFoundOne(one);
+      const one = await this.model.findById(id).lean();
       return one;
     } catch (error) {
       throw error;
     }
   }
-  async readByField(email, value) {
+  async readByField(email) {
     try {
-      const filter = { [email]: value };
-      const one = await this.model.find(filter);
-
-      if (one.length === 0) {
-        const error = new Error(`No documents found with ${email}: ${value}`);
-        error.statusCode = 404;
-        throw error;
-      }
-
+      const one = await this.model.findOne({ email });
       return one;
     } catch (error) {
       throw error;
@@ -95,7 +79,6 @@ class MongoManagger {
     try {
       const opt = { new: true }; // este objeto de configuracion opcional devuelve el objeto luego de la modificacion
       const one = await this.model.findByIdAndUpdate(id, data, opt);
-      notFoundOne(one);
       return one;
     } catch (error) {
       throw error;
@@ -104,7 +87,6 @@ class MongoManagger {
   async destroy(id) {
     try {
       const one = await this.model.findByIdAndDelete(id);
-      notFoundOne(one);
       return one;
     } catch (error) {
       throw error;
@@ -127,6 +109,6 @@ class MongoManagger {
 const products = new MongoManagger(Product);
 const users = new MongoManagger(User);
 const orders = new MongoManagger(Order);
-const events = new MongoManagger(Event);
 
-export { products, users, orders, events };
+export { products, users, orders };
+export default MongoManagger;

@@ -1,5 +1,5 @@
 import fs from "fs";
-import crypto from "crypto";
+import notFoundOne from "../../utils/noFoundOne.utils.js";
 
 class UsersManager {
   init() {
@@ -20,36 +20,23 @@ class UsersManager {
     this.users = [];
     this.init();
   }
-  async createUser(data) {
+  async create(data) {
     try {
-      if (!data.name || !data.email) {
-        const error = new Error("Nombre e email requeridos");
-        error.statusCode = 400;
-        throw error;
-      }
-      const event = {
-        id: crypto.randomBytes(12).toString("hex"),
-        name: data.name,
-        photo: data.photo || "photo",
-        email: data.email,
-      };
-      this.users.push(event);
+      this.users.push(data);
       const jsonData = JSON.stringify(this.users, null, 2);
       await fs.promises.writeFile(this.path, jsonData);
-      console.log("crear " + event.id);
-      return event.id;
+      return data;
     } catch (error) {
       throw error;
     }
   }
-  readUsers() {
+  read({ filter, options }) {
     try {
       if (this.users.length === 0) {
-        const error = new Error("No se encontraron usuarios!");
+        const error = new Error("NOT FOUND!");
         error.statusCode = 404;
         throw error;
       } else {
-        console.log(this.users);
         return this.users;
       }
     } catch (error) {
@@ -58,79 +45,56 @@ class UsersManager {
   }
   readOne(id) {
     try {
-      const one = this.users.find((each) => each.id === id);
+      const one = this.users.find((each) => each._id === id);
       if (!one) {
-        const error = new Error("No se encontraron usuarios!");
+        const error = new Error("NOT FOUND!");
         error.statusCode = 404;
         throw error;
       } else {
-        console.log("leer " + one);
         return one;
       }
     } catch (error) {
       throw error;
     }
   }
-  async removeUserById(id) {
-    try {
-      let one = this.users.find((each) => each.id === id);
-      if (!one) {
-        const error = new Error("No se encontraron usuarios!");
-        error.statusCode = 404;
-        throw error;
-      } else {
-        this.users = this.users.filter((each) => each.id !== id);
-        const jsonData = JSON.stringify(this.users, null, 2);
-        await fs.promises.writeFile(this.path, jsonData);
-        console.log("borrado " + id);
-        return id;
-      }
-    } catch (error) {
-      throw error;
-    }
-  }
-  async updateUser(userId, newData) {
-    try {
-      const userIndex = this.users.findIndex((user) => user.id === userId);
-
-      if (userIndex === -1) {
-        const error = new Error("No se encontraron usuarios!");
-        error.statusCode = 404;
-        throw error;
-      }
-
-      const updatedUser = {
-        ...this.users[userIndex],
-        ...newData,
-      };
-
-      this.users[userIndex] = updatedUser;
-
-      const jsonData = JSON.stringify(this.users, null, 2);
-      await fs.promises.writeFile(this.path, jsonData);
-
-      console.log("Usuario actualizado:", productId);
-      return userId;
-    } catch (error) {
-      throw error;
-    }
-  }
-  readByEmail(email) {
+  readByField(email) {
     try {
       const one = this.users.find((each) => each.email === email);
       if (!one) {
-        const error = new Error("Usuario no encontrado!");
-        error.statusCode = 404;
-        throw error;
+        return null;
       } else {
-        console.log("leer por email " + one.email);
         return one;
       }
     } catch (error) {
       throw error;
     }
   }
-
+  async update(eid, data) {
+    try {
+      const one = this.readOne(eid);
+      notFoundOne(one)
+      for (let each in data) {
+        one[each] = data[each]
+      }
+      const jsonData = JSON.stringify(this.users, null, 2);
+      await fs.promises.writeFile(this.path, jsonData);
+      return one;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async destroy(id) {
+    try {
+      const one = this.readOne(id);
+      notFoundOne(one)
+      this.users = this.users.filter((each) => each._id !== id);
+      const jsonData = JSON.stringify(this.users, null, 2);
+      await fs.promises.writeFile(this.path, jsonData);
+      return one;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 const users = new UsersManager("./src/data/fs/files/users.json");

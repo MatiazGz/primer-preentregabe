@@ -1,82 +1,33 @@
-import { Router } from "express";
-import { users } from "../../data/mongo/managger.mongo.js"
+import has8char from "../../middlewares/has8char.mid.js";
+import passport from "../../middlewares/passport.mid.js";
+import passCallBack from "../../middlewares/PassCallBack.mid.js";
+import CustomRouter from "../CustomRouter.js";
+import {
+  register,
+  login,
+  github,
+  me,
+  signout,
+  badauth,
+  verifyAccount,
+} from "../../controllers/sessions.controller.js";
 
-import has8char from "../../middlewares/has8char.mid.js"
-import isValidPass from "../../middlewares/isValidPass.mid.js";
-
-
-const sessionsRouter = Router();
-
-//register
-sessionsRouter.post("/register", has8char, async (req, res, next) => {
-  try {
-    const data = req.body;
-    await users.create(data);
-    return res.json({
-      statusCode: 201,
-      message: "Registered!",
-    });
-  } catch (error) {
-    return next(error);
+export default class SessionsRouter extends CustomRouter {
+  init() {
+    //register
+    this.create("/register", ["PUBLIC"], has8char, passCallBack("register"), register );
+    //login
+    this.create("/login", ["PUBLIC"], passCallBack("login"), login);
+    // github
+    this.create("/github", ["PUBLIC"], passport.authenticate("github", { scope: ["email", "profile"] }));
+    this.read("/github/callback", ["PUBLIC"], passport.authenticate("github", { session: false, failureRedirect: "/api/sessions/badauth"}), github);
+    //me
+    this.create("/", ["USER", "ADMIN", "PREM"], passCallBack("jwt"), me);
+    //singout
+    this.create("/signout", ["USER", "ADMIN", "PREM"], passCallBack("jwt"), signout);
+    //badauth
+    this.read("/badauth", ["PUBLIC"], badauth);
+    //verify
+    this.create("/verify", ["USER", "ADMIN", "PREM"], verifyAccount);
   }
-});
-
-//login
-
-sessionsRouter.post("/login", isValidPass, async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    if (email && password === "hola1234") {
-      req.session.email = email;
-      req.session.role = "admin"
-      return res.json({
-        statusCode: 200,
-        message: "Logged in!",
-        session: req.session,
-      });
-    }
-    const error = new Error("Bad Auth");
-    error.statusCode = 401;
-    throw error;
-  } catch (error) {
-    return next(error);
-  }
-});
-
-//me
-sessionsRouter.post("/", async (req, res, next) => {
-  try {
-    if (req.sessionID.email) {
-      return res.json({
-        statusCode: 200,
-        message: " Session with email: " + req.session.email,
-      });
-    } else {
-      const error = new Error("No Auth");
-      error.statusCode = 400;
-      throw error;
-    }
-  } catch (error) {
-    return next(error);
-  }
-});
-//singout
-sessionsRouter.post("/singOut", async (req, res, next) => {
-  try {
-    if (req.session.email) {
-      req.session.destroy();
-      return res.json({
-        statusCode: 200,
-        message: "Signed out!",
-      });
-    } else {
-      const error = new Error("No Auth");
-      error.statusCode = 400;
-      throw error;
-    }
-  } catch (error) {
-    return next(error);
-  }
-});
-
-export default sessionsRouter;
+}

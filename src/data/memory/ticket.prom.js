@@ -1,3 +1,4 @@
+import logger from "../../utils/logger/index.js";
 const fs = require("fs");
 
 const ruta = "./data/events.json";
@@ -21,5 +22,5 @@ const datos = JSON.stringify([
 ]);
 fs.promises
   .writeFile(ruta, datos)
-  .then((resultado) => console.log(resultado))
-  .catch((error) => console.log("error"));
+  .then((resultado) => logger.INFO(JSON.stringify(resultado)))
+  .catch((error) => logger.WARN(error.message));

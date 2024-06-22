@@ -1,18 +1,19 @@
-import { Router } from "express";
-import usersRouter from "./users.router.js";
-import eventsRouter from "./events.router.js";
-import productsRouter from "./products.router.js";
-import ordersRouter from "./orders.router.js";
-import sessionsRouter from "./sessions.router.js";
+import ProductsRouter from "./products.router.js";
+import CustomRouter from "../CustomRouter.js";
+import SessionsRouter from "./sessions.router.js";
+import UsersRouter from "./users.router.js";
+import OrdersRouter from "./orders.router.js";
 
-const apiRouter = Router();
+const session = new SessionsRouter();
+const users = new UsersRouter();
+const product = new ProductsRouter();
+const orders = new OrdersRouter();
 
-//definir los enrutadores
-apiRouter.use("/users", usersRouter);
-apiRouter.use("/orders", ordersRouter);
-apiRouter.use("/products", productsRouter);
-apiRouter.use("/events", eventsRouter);
-apiRouter.use("/sessions", sessionsRouter);
-
-export default apiRouter;
-//exporto el enrutador de la api para poder implementarlo en el enrutador del servidor
+export default class ApiRouter extends CustomRouter {
+  init() {
+    this.use("/products", product.getRouter());
+    this.use("/users", users.getRouter());
+    this.use("/orders", orders.getRouter());
+    this.use("/sessions", session.getRouter());
+  }
+}

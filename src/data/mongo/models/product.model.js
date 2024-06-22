@@ -10,7 +10,7 @@ const schema = new Schema(
       default:
         "https://rockcontent.com/es/wp-content/uploads/sites/3/2019/02/o-que-e-produto-no-mix-de-marketing-1024x538.png",
     },
-    price: { type: Number, default: 10, index: true },
+    price: { type: Number, default: 10 },
     stock: { type: Number, default: 50 },
     date: { type: Date, default: new Date(), index: true },
   },
@@ -18,5 +18,6 @@ const schema = new Schema(
 );
 
 schema.plugin(mongoosePaginate);
+
 const Product = model(collection, schema);
 export default Product;

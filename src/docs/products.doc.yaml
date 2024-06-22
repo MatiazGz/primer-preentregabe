@@ -1,0 +1,372 @@
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        title:
+          description: Nombre del producto
+          type: string
+        category:
+          description: Categoría del producto
+          type: string
+        photo:
+          description: Imagen del producto
+          type: string
+        price:
+          description: Precio del producto
+          type: integer
+          format: int64
+        stock:
+          description: Cantidad de unidades disponibles del producto
+          type: integer
+          format: int64
+        owner:
+          description: ObjectId que referencia al usuario que creo el producto
+          type: string
+      example:
+        title: Generic Soft Gloves
+        photo: https://rockcontent.com/es/wp-content/uploads/sites/3/2019/02/o-que-e-produto-no-mix-de-marketing-1024x538.png
+        price: 251
+        stock: 35
+  responses:
+    create:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          description: Estado de la solicitud
+        response:
+          type: object
+          description: Documentos del producto creado
+      example:
+        status: success
+        response:
+          _id: 7caa63fa1f49cb854a8677a6
+          title: Generic Soft Gloves
+          photo: https://rockcontent.com/es/wp-content/uploads/sites/3/2019/02/o-que-e-produto-no-mix-de-marketing-1024x538.png
+          price: 251
+          stock: 35
+    read:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          description: Estado de la solicitud
+        response:
+          type: object
+          description: Documentos de la solicitud
+      example:
+        statusCode: 200
+        response:
+          - _id: 81c0ad8b6c41a783cfad7064
+            title: Practical Cotton Fish
+            category: Categoría del primer producto
+            photo: https://rockcontent.com/es/wp-content/uploads/sites/3/2019/02/o-que-e-produto-no-mix-de-marketing-1024x538.png
+            price: 369
+            stock: 9
+          - _id: 9bb822f4785c1126634d83e5
+            title: Small Fresh Pizza
+            category: Categoría del segundo producto
+            photo: https://rockcontent.com/es/wp-content/uploads/sites/3/2019/02/o-que-e-produto-no-mix-de-marketing-1024x538.png
+            price: 763
+            stock: 24
+    update:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          description: Código de estado de la respuesta
+        response:
+          type: object
+          description: Objeto del documento modificado
+      example:
+        statusCode: 200
+        response:
+          _id: 7caa63fa1f49cb854a8677a6
+          title: Generic Soft Gloves
+          photo: https://rockcontent.com/es/wp-content/uploads/sites/3/2019/02/o-que-e-produto-no-mix-de-marketing-1024x538.png
+          price: 251
+          stock: 35
+    readOne:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          description: Estado de la solicitud
+        response:
+          type: object
+          description: Documentos de la solicitud
+      example:
+        statusCode: 200
+        response:
+          - _id: 81c0ad8b6c41a783cfad7064
+            title: Practical Cotton Fish
+            category: Categoría del primer producto
+            photo: https://rockcontent.com/es/wp-content/uploads/sites/3/2019/02/o-que-e-produto-no-mix-de-marketing-1024x538.png
+            price: 369
+            stock: 9
+    auth:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          description: Estado de la solicitud
+        path:
+          type: string
+          description: Descripción del endpoint del error
+        message:
+          type: string
+          description: Descripción del error
+      example:
+        statusCode: 401
+        message: Invalid credentials
+    forbidden:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          description: Estado de la solicitud
+        path:
+          type: string
+          description: Descripción del endpoint del error
+        message:
+          type: string
+          description: Descripción del error
+      example:
+        statusCode: 403
+        message: Forbiden
+    notFound:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          description: Código de estado de la respuesta
+        path:
+          type: string
+          description: Descripción del endpoint del error
+        message:
+          type: string
+          description: Descripción del error
+      example:
+        statusCode: 404
+        message: Not found
+    fatal:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          description: Código de estado de la respuesta
+        path:
+          type: string
+          description: Descripción del endpoint del error
+        message:
+          type: string
+          description: Descripción del error
+      example:
+        statusCode: 500
+        message: jwt must be provided
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token
+paths:
+  /api/products:
+    post:
+      summary: Agregar un nuevo producto al e-commerce
+      tags:
+        - Product
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/Product'
+      responses:
+        '201':
+          description: Éxito en la creación de un producto
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/create'
+        '401':
+          description: Credenciales invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/auth'
+        '403':
+          description: Acceso no autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/forbidden'
+        '500':
+          description: Falla del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/fatal'
+    get:
+      summary: Leer los productos de la base de datos
+      tags:
+        - Product
+      parameters:
+        - name: page
+          in: query
+          type: integer
+          description: Número de página a mostrar
+        - name: limit
+          in: query
+          type: integer
+          description: Número de documentos a mostrar por página
+        - name: title
+          in: query
+          type: string
+          description: Nombre o parte del nombre del producto a mostrar
+      responses:
+        '200':
+          description: Éxito en la lectura de productos
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/read'
+        '404':
+          description: Documentos no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/notFound'
+        '500':
+          description: Falla del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/fatal'
+  /api/products/:pid:
+    get:
+      summary: Leer un producto en especifico de la base de datos
+      tags:
+        - Product
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: ObjectId del producto a buscar
+          schema:
+            $type: string
+      responses:
+        '200':
+          description: Éxito en leer el producto
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/readOne'
+        '404':
+          description: Documento no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/notFound'
+        '500':
+          description: Falla del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/fatal'
+    put:
+      summary: Actualizar un producto
+      tags:
+        - Product
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: ObjectId del producto a modificar
+          schema:
+            $type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/Product'
+      responses:
+        '200':
+          description: Éxito al actualizar un producto
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/update'
+        '401':
+          description: Credenciales invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/auth'
+        '403':
+          description: Acceso no autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/forbidden'
+        '404':
+          description: Documento no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/notFound'
+        '500':
+          description: Falla del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/fatal'
+    delete:
+      summary: Eliminar un producto
+      tags:
+        - Product
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: ObjectId del producto a eliminar
+          schema:
+            $type: string
+      responses:
+        '200':
+          description: Éxito al eliminar un producto
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/update'
+        '401':
+          description: Credenciales invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/auth'
+        '403':
+          description: Acceso no autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/forbidden'
+        '404':
+          description: Documento no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/notFound'
+        '500':
+          description: Falla del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#components/responses/fatal'

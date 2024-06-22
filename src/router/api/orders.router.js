@@ -1,69 +1,16 @@
-import { Router } from "express";
-import { orders } from "../../data/mongo/managger.mongo.js";
+import CustomRouter from "../CustomRouter.js";
+import { create, read, report, update, destroy, } from "../../controllers/orders.controller.js"
 
-const ordersRouter = Router();
+export default class OrdersRouter extends CustomRouter {
+  init() {
+    this.create("/", ["PUBLIC"], create);
 
-ordersRouter.post("/", async (req, res, next) => {
-  try {
-    const data = req.body;
-    const one = await orders.create(data);
-    return res.json({
-      statusCode: 201,
-      response: one,
-    });
-  } catch (error) {
-    return next(error);
-  }
-});
-ordersRouter.get("/total/:uid", async (req, res, next) => {
-  try {
-    const { uid } = req.params;
-    const report = await orders.reportBill(uid);
-    return res.json({
-      statusCode: 200,
-      response: report,
-    });
-  } catch (error) {
-    return next(error);
-  }
-});
-ordersRouter.get("/:uid", async (req, res, next) => {
-  try {
-    const { uid } = req.params;
-    const filter = { user_id: uid };
-    const all = await orders.read({ filter });
-    return res.json({
-      statusCode: 200,
-      response: all,
-    });
-  } catch (error) {
-    return next(error);
-  }
-});
-ordersRouter.put("/:oid", async (req, res, next) => {
-  try {
-    const { oid } = req.params;
-    const data = req.body;
-    const one = await orders.update(oid, data);
-    return res.json({
-      statusCode: 200,
-      response: one,
-    });
-  } catch (error) {
-    return next(error);
-  }
-});
-ordersRouter.delete("/:oid", async (req, res, next) => {
-  try {
-    const { oid } = req.params;
-    const one = await orders.destroy(oid);
-    return res.json({
-      statusCode: 200,
-      response: one,
-    });
-  } catch (error) {
-    return next(error);
-  }
-});
+    this.read("/", ["PUBLIC"], read);
 
-export default ordersRouter;
+    this.read("/total/:uid", ["PUBLIC"], report);
+
+    this.update("/:oid", ["PUBLIC"], update);
+
+    this.destroy("/:oid", ["PUBLIC"], destroy);
+  }
+}

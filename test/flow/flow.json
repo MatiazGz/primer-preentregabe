@@ -1,0 +1,108 @@
+{
+  "aggregate": {
+    "counters": {
+      "vusers.created_by_name.login, create, read, destroy & signout": 300,
+      "vusers.created": 300,
+      "http.requests": 300,
+      "plugins.metrics-by-endpoint./api/sessions/login.errors.ECONNREFUSED": 300,
+      "errors.ECONNREFUSED": 300,
+      "vusers.failed": 300
+    },
+    "rates": {
+      "http.request_rate": 10
+    },
+    "firstCounterAt": 1713491683052,
+    "lastCounterAt": 1713491712802,
+    "firstMetricAt": 1713491683052,
+    "lastMetricAt": 1713491712802,
+    "period": 1713491710000,
+    "summaries": {},
+    "histograms": {}
+  },
+  "intermediate": [
+    {
+      "counters": {
+        "vusers.created_by_name.login, create, read, destroy & signout": 70,
+        "vusers.created": 70,
+        "http.requests": 70,
+        "plugins.metrics-by-endpoint./api/sessions/login.errors.ECONNREFUSED": 70,
+        "errors.ECONNREFUSED": 70,
+        "vusers.failed": 70
+      },
+      "rates": {
+        "http.request_rate": 10
+      },
+      "http.request_rate": null,
+      "firstCounterAt": 1713491683052,
+      "lastCounterAt": 1713491689803,
+      "firstMetricAt": 1713491683052,
+      "lastMetricAt": 1713491689803,
+      "period": "1713491680000",
+      "summaries": {},
+      "histograms": {}
+    },
+    {
+      "counters": {
+        "vusers.created_by_name.login, create, read, destroy & signout": 100,
+        "vusers.created": 100,
+        "http.requests": 100,
+        "plugins.metrics-by-endpoint./api/sessions/login.errors.ECONNREFUSED": 100,
+        "errors.ECONNREFUSED": 100,
+        "vusers.failed": 100
+      },
+      "rates": {
+        "http.request_rate": 10
+      },
+      "http.request_rate": null,
+      "firstCounterAt": 1713491690051,
+      "lastCounterAt": 1713491699802,
+      "firstMetricAt": 1713491690051,
+      "lastMetricAt": 1713491699802,
+      "period": "1713491690000",
+      "summaries": {},
+      "histograms": {}
+    },
+    {
+      "counters": {
+        "vusers.created_by_name.login, create, read, destroy & signout": 100,
+        "vusers.created": 100,
+        "http.requests": 100,
+        "plugins.metrics-by-endpoint./api/sessions/login.errors.ECONNREFUSED": 100,
+        "errors.ECONNREFUSED": 100,
+        "vusers.failed": 100
+      },
+      "rates": {
+        "http.request_rate": 10
+      },
+      "http.request_rate": null,
+      "firstCounterAt": 1713491700051,
+      "lastCounterAt": 1713491709802,
+      "firstMetricAt": 1713491700051,
+      "lastMetricAt": 1713491709802,
+      "period": "1713491700000",
+      "summaries": {},
+      "histograms": {}
+    },
+    {
+      "counters": {
+        "vusers.created_by_name.login, create, read, destroy & signout": 30,
+        "vusers.created": 30,
+        "http.requests": 30,
+        "plugins.metrics-by-endpoint./api/sessions/login.errors.ECONNREFUSED": 30,
+        "errors.ECONNREFUSED": 30,
+        "vusers.failed": 30
+      },
+      "rates": {
+        "http.request_rate": 10
+      },
+      "http.request_rate": null,
+      "firstCounterAt": 1713491710051,
+      "lastCounterAt": 1713491712802,
+      "firstMetricAt": 1713491710051,
+      "lastMetricAt": 1713491712802,
+      "period": "1713491710000",
+      "summaries": {},
+      "histograms": {}
+    }
+  ]
+}
